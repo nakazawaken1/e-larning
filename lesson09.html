@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第9回：データを読み込もう！ - 時間割アプリを作ろう</title>
+    <style>
+        :root {
+            --primary: #ec4899;
+            --primary-light: #f472b6;
+            --secondary: #6366f1;
+            --bg: #fdf2f8;
+            --text: #1f2937;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            margin-bottom: 40px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            color: #4f46e5;
+            margin-top: 25px;
+        }
+
+        .goal-box {
+            background-color: #fce7f3;
+            border-left: 5px solid var(--primary);
+            padding: 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .point-box {
+            background-color: #e0e7ff;
+            border-left: 5px solid var(--secondary);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .check-box {
+            background-color: #d1fae5;
+            border-left: 5px solid #10b981;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        code {
+            background-color: #1f2937;
+            color: #fbbf24;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: monospace;
+            position: relative;
+        }
+
+        pre::before {
+            content: "JS";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #f59e0b;
+            color: black;
+            padding: 5px 10px;
+            border-bottom-left-radius: 10px;
+            border-top-right-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .diagram {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        ul,
+        ol {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #4f46e5;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero {
+                padding: 80px 20px;
+            }
+        }
+
+        /* Quiz Styles */
+        .quiz-item {
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .question {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--text);
+            font-size: 1.1rem;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+
+        .options label:hover {
+            background-color: #fce7f3;
+            border-color: #f472b6;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .check-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(236, 72, 153, 0.3);
+        }
+
+        .check-btn:hover {
+            background-color: #be185d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(236, 72, 153, 0.4);
+        }
+
+        .check-btn:active {
+            transform: translateY(0);
+        }
+
+        .feedback {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .correct {
+            color: #059669;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .incorrect {
+            color: #dc2626;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .correct-bg {
+            background-color: #ecfdf5;
+            border: 2px solid #10b981;
+        }
+
+        .incorrect-bg {
+            background-color: #fef2f2;
+            border: 2px solid #ef4444;
+        }
+
+        #total-score {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .perfect {
+            color: #ea580c;
+            background-color: #fff7ed;
+            border: 2px dashed #ea580c;
+            padding: 20px;
+            display: inline-block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Navigation Styles */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 20px;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            color: var(--text);
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            background: #f9fafb;
+        }
+
+        .nav-btn.prev {
+            color: #64748b;
+        }
+
+        .nav-btn.next {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .nav-btn.top {
+            color: var(--text);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hero">
+        <div class="container">
+            <h1>第9回：ページを開いたらデータを読み込もう</h1>
+            <p style="font-size: 1.2rem; margin-top: 10px;">完成まであと少し！自動読み込みを実現しよう！</p>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+            <h2>今日のゴール 🎯</h2>
+            <div class="goal-box">
+                保存したデータが次回アクセス時に自動で表示される！
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>学ぶこと 📚</h2>
+            <ul>
+                <li>ページ読み込み時の処理</li>
+                <li>保存したデータの復元</li>
+                <li>JSONから配列への変換</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>やってみよう！ 💻</h2>
+
+            <h3><span class="step-number">1</span>データを読み込む関数を作ろう</h3>
+            <pre>
+// 時間割データを読み込む関数
+function loadSchedule() {
+  // 保存されたデータを取得
+  const savedData = localStorage.getItem('schedule');
+  
+  // データがなければ終了
+  if (!savedData) {
+    console.log('保存データがありません');
+    return;
+  }
+  
+  // JSON文字列を配列に戻す
+  const scheduleData = JSON.parse(savedData);
+  
+  // すべてのマスを取得
+  const cells = document.querySelectorAll('td');
+  
+  // 各マスにデータを設定
+  cells.forEach(function(cell, index) {
+    if (scheduleData[index]) {
+      cell.textContent = scheduleData[index];
+    }
+  });
+  
+  console.log('読み込みました！', scheduleData);
+}</pre>
+
+            <h3><span class="step-number">2</span>ページ読み込み時に実行しよう</h3>
+            <pre>
+// ページが読み込まれたら実行
+document.addEventListener('DOMContentLoaded', function() {
+  loadSchedule();
+});</pre>
+
+            <h3><span class="step-number">3</span>動作確認！</h3>
+            <ol>
+                <li>いくつかの教科を選択</li>
+                <li>ブラウザを閉じる（または更新）</li>
+                <li>もう一度ファイルを開く</li>
+                <li>前回の内容が表示されていれば成功！</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h2>今日のポイント 💡</h2>
+            <div class="point-box">
+                <ul>
+                    <li><code>DOMContentLoaded</code> → HTMLの読み込みが完了したイベント</li>
+                    <li><code>addEventListener</code> → イベントに処理を追加</li>
+                    <li><code>JSON.parse()</code> → JSON文字列をJavaScriptのデータに戻す</li>
+                    <li><code>forEach</code> の第2引数 <code>index</code> → 何番目の要素かがわかる</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>コードの実行順序 📋</h2>
+            <ol>
+                <li>HTMLが読み込まれる</li>
+                <li><code>DOMContentLoaded</code> イベントが発生</li>
+                <li><code>loadSchedule()</code> が実行される</li>
+                <li>保存データが表示される</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h2>チャレンジ問題 🌟</h2>
+            <ol>
+                <li>データがない時に「まだ時間割が登録されていません」と表示してみよう</li>
+                <li>読み込み完了時にメッセージを一瞬だけ表示してみよう</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h2>理解度チェック ✅</h2>
+            <div class="check-box">
+                <p>クイズに答えてみよう！正解だと思うものを選んで「答え合わせ」ボタンを押してね。</p>
+                <form id="quizForm">
+                    <div class="quiz-item">
+                        <p class="question">Q1. JSON形式の文字列を、JavaScriptの配列やオブジェクトに戻す関数は？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="incorrect"> JSON.stringify()</label>
+                            <label><input type="radio" name="q1" value="correct"> JSON.parse()</label>
+                            <label><input type="radio" name="q1" value="incorrect"> JSON.decode()</label>
+                        </div>
+                        <div class="feedback" id="feedback-q1"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q2. HTMLの読み込みが完了した時に発生するイベントの名前は？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="incorrect"> window.onload</label>
+                            <label><input type="radio" name="q2" value="correct"> DOMContentLoaded</label>
+                            <label><input type="radio" name="q2" value="incorrect"> document.ready</label>
+                        </div>
+                        <div class="feedback" id="feedback-q2"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q3. イベントが発生した時の処理を追加するための命令は？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q3" value="correct"> addEventListener</label>
+                            <label><input type="radio" name="q3" value="incorrect"> onEvent</label>
+                            <label><input type="radio" name="q3" value="incorrect"> setHandler</label>
+                        </div>
+                        <div class="feedback" id="feedback-q3"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q4. ローカルストレージにデータが保存されていない場合、getItem は何を返しますか？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q4" value="correct"> null</label>
+                            <label><input type="radio" name="q4" value="incorrect"> undefined</label>
+                            <label><input type="radio" name="q4" value="incorrect"> 0</label>
+                        </div>
+                        <div class="feedback" id="feedback-q4"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q5. forEach の2番目の引数（index）には何が入っていますか？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q5" value="incorrect"> 要素の値</label>
+                            <label><input type="radio" name="q5" value="correct"> 要素の番号（0から始まる）</label>
+                            <label><input type="radio" name="q5" value="incorrect"> 配列の長さ</label>
+                        </div>
+                        <div class="feedback" id="feedback-q5"></div>
+                    </div>
+
+                    <button type="button" class="check-btn" onclick="checkAnswers()">答え合わせをする！</button>
+                    <div id="total-score"></div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>今日のアウトプット ✅</h2>
+            <ul>
+                <li><input type="checkbox"> ページを開くと前回のデータが表示される</li>
+                <li><input type="checkbox"> Consoleに「読み込みました！」と表示される</li>
+                <li><input type="checkbox"> ブラウザを閉じて開いても内容が残っている</li>
+            </ul>
+        </div>
+
+        <div class="navigation">
+            <a href="lesson08.html" class="nav-btn prev">← 前のレッスン</a>
+            <a href="index.html" class="nav-btn top">目次へ</a>
+            <a href="lesson10.html" class="nav-btn next">次のレッスン →</a>
+        </div>
+
+    </div>
+
+    <script>
+        function checkAnswers() {
+            let score = 0;
+            const total = 5;
+
+            score += checkQuestion('q1', '正解！Parse（解析する）という意味だよ！');
+            score += checkQuestion('q2', '正解！DOM（ドム＝HTMLの構造）のContent（中身）がLoaded（読み込まれた）という意味だね！');
+            score += checkQuestion('q3', '正解！イベントリスナー（イベントを聞く人）を追加するよ！');
+            score += checkQuestion('q4', '正解！「何もない」ことを表す null が返ってくるよ！');
+            score += checkQuestion('q5', '正解！何番目のデータかを知りたい時に便利だね！');
+
+            const scoreDiv = document.getElementById('total-score');
+            if (score === total) {
+                scoreDiv.innerHTML = `<p class="perfect">すごい！ ${total}問中 ${score}問正解！ これで自動保存・読み込み機能は完璧だね！🎉</p>`;
+            } else {
+                scoreDiv.innerHTML = `<p>おしい！ ${total}問中 ${score}問正解。もう一度確認してみよう！💪</p>`;
+            }
+        }
+
+        function checkQuestion(name, explanation) {
+            const options = document.getElementsByName(name);
+            const feedback = document.getElementById('feedback-' + name);
+            let isCorrect = false;
+            let isSelected = false;
+
+            for (const option of options) {
+                if (option.checked) {
+                    isSelected = true;
+                    if (option.value === 'correct') {
+                        isCorrect = true;
+                    }
+                }
+            }
+
+            if (!isSelected) {
+                feedback.innerHTML = '<span class="incorrect">まだ選んでないよ！</span>';
+                feedback.className = 'feedback show';
+                return 0;
+            }
+
+            if (isCorrect) {
+                feedback.innerHTML = '<span class="correct">正解！⭕</span> ' + explanation;
+                feedback.className = 'feedback show correct-bg';
+                return 1;
+            } else {
+                feedback.innerHTML = '<span class="incorrect">ざんねん...❌</span> 違うみたい。用語の意味を考えてみよう！';
+                feedback.className = 'feedback show incorrect-bg';
+                return 0;
+            }
+        }
+    </script>
+</body>
+
+</html>

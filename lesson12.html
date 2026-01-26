@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第12回：完成！自分だけの時間割アプリ - 時間割アプリを作ろう</title>
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --primary-light: #a78bfa;
+            --secondary: #10b981;
+            --bg: #f5f3ff;
+            --text: #1f2937;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            margin-bottom: 40px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            color: #059669;
+            margin-top: 25px;
+        }
+
+        .goal-box {
+            background-color: #ede9fe;
+            border-left: 5px solid var(--primary);
+            padding: 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .point-box {
+            background-color: #ecfdf5;
+            border-left: 5px solid var(--secondary);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .check-box {
+            background-color: #d1fae5;
+            border-left: 5px solid #10b981;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        code {
+            background-color: #1f2937;
+            color: #fbbf24;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: monospace;
+            position: relative;
+        }
+
+        pre::before {
+            content: "CODE";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #f59e0b;
+            color: black;
+            padding: 5px 10px;
+            border-bottom-left-radius: 10px;
+            border-top-right-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .diagram {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        ul,
+        ol {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #e5e7eb;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background: #f3f4f6;
+        }
+
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero {
+                padding: 80px 20px;
+            }
+        }
+
+        /* Quiz Styles */
+        .quiz-item {
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        .question {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--text);
+            font-size: 1.1rem;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+
+        .options label:hover {
+            background-color: #ede9fe;
+            border-color: #a78bfa;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .check-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(139, 92, 246, 0.3);
+        }
+
+        .check-btn:hover {
+            background-color: #7c3aed;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .check-btn:active {
+            transform: translateY(0);
+        }
+
+        .feedback {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .correct {
+            color: #059669;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .incorrect {
+            color: #dc2626;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .correct-bg {
+            background-color: #ecfdf5;
+            border: 2px solid #10b981;
+        }
+
+        .incorrect-bg {
+            background-color: #fef2f2;
+            border: 2px solid #ef4444;
+        }
+
+        #total-score {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .perfect {
+            color: #ea580c;
+            background-color: #fff7ed;
+            border: 2px dashed #ea580c;
+            padding: 20px;
+            display: inline-block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .congrats {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #7c3aed;
+            margin: 40px 0;
+            padding: 40px;
+            background: #f5f3ff;
+            border-radius: 20px;
+            border: 3px dashed #8b5cf6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hero">
+        <div class="container">
+            <h1>第12回：完成！自分だけの時間割アプリ</h1>
+            <p style="font-size: 1.2rem; margin-top: 10px;">世界に一つだけのアプリを完成させよう！</p>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+            <h2>今日のゴール 🎯</h2>
+            <div class="goal-box">
+                オリジナルの機能やデザインを追加して完成させる！
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>これまでのふりかえり 📖</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>回</th>
+                        <th>学んだこと</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>HTMLの基本、ファイルの作り方</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>CSSでデザイン、色の変え方</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>テーブル（表）の作り方</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>テーブルのスタイリング</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>JavaScript入門、ボタン処理</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>クリックイベント、入力処理</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>セレクトボックス</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>ローカルストレージ保存</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>データ読み込み</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>リセット機能</td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>レスポンシブ＆アニメーション</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>カスタマイズアイデア 💡</h2>
+
+            <h3>アイデア1：教科ごとの色分け</h3>
+            <pre>
+// 教科の色
+const subjectColors = {
+  '国語': '#ffcdd2',
+  '算数': '#c8e6c9',
+  '理科': '#bbdefb',
+  '社会': '#fff9c4',
+  '英語': '#f8bbd0',
+  // 他の教科も追加
+};
+
+// マスに色をつける
+function updateCellColor(cell) {
+  const subject = cell.textContent;
+  cell.style.backgroundColor = subjectColors[subject] || '';
+}</pre>
+
+            <h3>アイデア2：今日の授業をハイライト</h3>
+            <pre>
+// 今日の曜日を取得（0=日曜, 1=月曜...）
+const today = new Date().getDay();
+
+// 月〜金（1〜5）の場合、その列をハイライト
+if (today >= 1 && today <= 5) {
+  const rows = document.querySelectorAll('tr');
+  rows.forEach(function(row) {
+    const cell = row.children[today];
+    if (cell) {
+      cell.style.boxShadow = '0 0 10px #ffd700';
+    }
+  });
+}</pre>
+
+            <h3>アイデア3：印刷機能</h3>
+            <pre>
+&lt;button id="printButton"&gt;🖨️ 印刷&lt;/button&gt;</pre>
+            <pre>
+document.getElementById('printButton').onclick = function() {
+  window.print();
+};</pre>
+
+            <h3>アイデア4：時間割のタイトル変更</h3>
+            <pre>
+&lt;input type="text" id="titleInput" placeholder="時間割の名前"&gt;</pre>
+            <pre>
+const titleInput = document.getElementById('titleInput');
+const title = document.querySelector('h1');
+
+titleInput.onchange = function() {
+  title.textContent = titleInput.value || '時間割';
+  localStorage.setItem('title', titleInput.value);
+};
+
+// 読み込み時
+const savedTitle = localStorage.getItem('title');
+if (savedTitle) {
+  title.textContent = savedTitle;
+  titleInput.value = savedTitle;
+}</pre>
+        </div>
+
+        <div class="card">
+            <h2>自分だけのアイデアを追加しよう！ ✨</h2>
+            <ul>
+                <li>🎨 色やデザインを変えてみる</li>
+                <li>⏰ 時間の表示を追加する</li>
+                <li>🔔 特定の教科にマークをつける</li>
+                <li>📝 メモ欄を追加する</li>
+                <li>🌙 ダークモードを作る</li>
+            </ul>
+        </div>
+
+        <div class="congrats">
+            おつかれさま！これであなたもWebプログラマーの仲間入りだ！🚀
+        </div>
+
+        <div class="card">
+            <h2>理解度チェック ✅</h2>
+            <div class="check-box">
+                <p>クイズに答えてみよう！正解だと思うものを選んで「答え合わせ」ボタンを押してね。</p>
+                <form id="quizForm">
+                    <div class="quiz-item">
+                        <p class="question">Q1. ブラウザの印刷機能を呼び出すためのJavaScriptの命令は？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="incorrect"> printer.start()</label>
+                            <label><input type="radio" name="q1" value="correct"> window.print()</label>
+                            <label><input type="radio" name="q1" value="incorrect"> document.print()</label>
+                        </div>
+                        <div class="feedback" id="feedback-q1"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q2. new Date().getDay() で「0」が返ってきた場合、それは何曜日？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="correct"> 日曜日</label>
+                            <label><input type="radio" name="q2" value="incorrect"> 月曜日</label>
+                            <label><input type="radio" name="q2" value="incorrect"> 土曜日</label>
+                        </div>
+                        <div class="feedback" id="feedback-q2"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q3. このコースでデータをブラウザに保存するために使った機能は何？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q3" value="incorrect"> クッキー（Cookies）</label>
+                            <label><input type="radio" name="q3" value="incorrect"> データベース（SQL）</label>
+                            <label><input type="radio" name="q3" value="correct"> ローカルストレージ（localStorage）</label>
+                        </div>
+                        <div class="feedback" id="feedback-q3"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q4. JavaScriptで要素の背景色を変更する場合、style のあとに続くプロパティ名は何？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q4" value="incorrect"> background-color</label>
+                            <label><input type="radio" name="q4" value="correct"> backgroundColor</label>
+                            <label><input type="radio" name="q4" value="incorrect"> bgColor</label>
+                        </div>
+                        <div class="feedback" id="feedback-q4"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q5. window オブジェクトの print メソッドを実行すると何が起きますか？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q5" value="correct"> 印刷ダイアログが開く</label>
+                            <label><input type="radio" name="q5" value="incorrect"> コンソールに文字が出る</label>
+                            <label><input type="radio" name="q5" value="incorrect"> ページが更新される</label>
+                        </div>
+                        <div class="feedback" id="feedback-q5"></div>
+                    </div>
+
+                    <button type="button" class="check-btn" onclick="checkAnswers()">答え合わせをする！</button>
+                    <div id="total-score"></div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>最終チェックリスト ✅</h2>
+            <ul>
+                <li><input type="checkbox"> 時間割表が表示される</li>
+                <li><input type="checkbox"> 教科を選択できる</li>
+                <li><input type="checkbox"> データが保存される</li>
+                <li><input type="checkbox"> リセットができる</li>
+                <li><input type="checkbox"> デザインがかっこいい</li>
+                <li><input type="checkbox"> オリジナルの機能を追加した</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <script>
+        function checkAnswers() {
+            let score = 0;
+            const total = 5;
+
+            score += checkQuestion('q1', '正解！そのまんま「プリント」だね！');
+            score += checkQuestion('q2', '正解！プログラムでは0から数えることが多いよ（0が日曜、1が月曜...）');
+            score += checkQuestion('q3', '正解！手軽にローカル（自分の端末）に保存できる便利機能だね！');
+            score += checkQuestion('q4', '正解！JavaScriptではハイフン（-）の代わりにキャメルケース（大文字続き）を使うよ！');
+            score += checkQuestion('q5', '正解！自分で作ったページを紙に印刷して貼れるね！');
+
+            const scoreDiv = document.getElementById('total-score');
+            if (score === total) {
+                scoreDiv.innerHTML = `<p class="perfect">全問正解！おめでとう！君はもう立派なエンジニアだ！これからも楽しくプログラミングを続けてね！🎉</p>`;
+            } else {
+                scoreDiv.innerHTML = `<p>おしい！ ${total}問中 ${score}問正解。最後まで諦めずに見直そう！💪</p>`;
+            }
+        }
+
+        function checkQuestion(name, explanation) {
+            const options = document.getElementsByName(name);
+            const feedback = document.getElementById('feedback-' + name);
+            let isCorrect = false;
+            let isSelected = false;
+
+            for (const option of options) {
+                if (option.checked) {
+                    isSelected = true;
+                    if (option.value === 'correct') {
+                        isCorrect = true;
+                    }
+                }
+            }
+
+            if (!isSelected) {
+                feedback.innerHTML = '<span class="incorrect">まだ選んでないよ！</span>';
+                feedback.className = 'feedback show';
+                return 0;
+            }
+
+            if (isCorrect) {
+                feedback.innerHTML = '<span class="correct">正解！⭕</span> ' + explanation;
+                feedback.className = 'feedback show correct-bg';
+                return 1;
+            } else {
+                feedback.innerHTML = '<span class="incorrect">ざんねん...❌</span> 違うみたい。もう一度考えてみよう！';
+                feedback.className = 'feedback show incorrect-bg';
+                return 0;
+            }
+        }
+    </script>
+</body>
+
+</html>

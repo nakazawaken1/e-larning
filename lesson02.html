@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第2回：ページを飾ろう！ - 時間割アプリを作ろう</title>
+    <style>
+        :root {
+            --primary: #ec4899;
+            --primary-light: #f472b6;
+            --secondary: #6366f1;
+            --bg: #fff1f2;
+            --text: #1f2937;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            margin-bottom: 40px;
+        }
+
+        .hero img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 25px;
+        }
+
+        .goal-box {
+            background-color: #fce7f3;
+            border-left: 5px solid var(--primary);
+            padding: 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .point-box {
+            background-color: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .check-box {
+            background-color: #d1fae5;
+            border-left: 5px solid #10b981;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        code {
+            background-color: #1f2937;
+            color: #fbbf24;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: monospace;
+            position: relative;
+        }
+
+        pre::before {
+            content: "CODE";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            padding: 5px 10px;
+            border-bottom-left-radius: 10px;
+            border-top-right-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+        .diagram {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .diagram img {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-height: 400px;
+        }
+
+        ul,
+        ol {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #e5e7eb;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f3f4f6;
+        }
+
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero {
+                padding: 60px 20px;
+            }
+        }
+
+        /* Quiz Styles */
+        .quiz-item {
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .question {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--text);
+            font-size: 1.1rem;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+
+        .options label:hover {
+            background-color: #e0e7ff;
+            border-color: #818cf8;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .check-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(236, 72, 153, 0.3);
+        }
+
+        .check-btn:hover {
+            background-color: #db2777;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(236, 72, 153, 0.4);
+        }
+
+        .check-btn:active {
+            transform: translateY(0);
+        }
+
+        .feedback {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .correct {
+            color: #059669;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .incorrect {
+            color: #dc2626;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .correct-bg {
+            background-color: #ecfdf5;
+            border: 2px solid #10b981;
+        }
+
+        .incorrect-bg {
+            background-color: #fef2f2;
+            border: 2px solid #ef4444;
+        }
+
+        #total-score {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .perfect {
+            color: #ea580c;
+            background-color: #fff7ed;
+            border: 2px dashed #ea580c;
+            padding: 20px;
+            display: inline-block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Navigation Styles */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 20px;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            color: var(--text);
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            background: #f9fafb;
+        }
+
+        .nav-btn.prev {
+            color: #64748b;
+        }
+
+        .nav-btn.next {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .nav-btn.top {
+            color: var(--text);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hero">
+        <div class="container">
+            <h1>第2回：ページを飾ろう！<br>CSSでデザイン</h1>
+            <img src="images/lesson02_header.png" alt="CSSデザインのイラスト">
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+            <h2>今日のゴール 🎯</h2>
+            <div class="goal-box">
+                カラフルなタイトルと背景色のついたページを作る！
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>学ぶこと 📚</h2>
+            <ul>
+                <li>CSSって何？</li>
+                <li>色の変え方</li>
+                <li>文字の大きさの変え方</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>前回の復習 🔄</h2>
+            <p><code>index.html</code> ファイルを開いて、前回のコードがあることを確認しよう</p>
+        </div>
+
+        <div class="card">
+            <h2>やってみよう！ 💻</h2>
+
+            <h3><span class="step-number">1</span>CSSを書く場所を作ろう</h3>
+            <p><code>&lt;head&gt;</code> の中に <code>&lt;style&gt;</code> タグを追加しよう：</p>
+            <pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;わたしの時間割&lt;/title&gt;
+  &lt;style&gt;
+    /* ここにCSSを書くよ */
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;時間割&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+            <h3><span class="step-number">2</span>色をつけよう</h3>
+            <p><code>&lt;style&gt;</code> の中に以下を書こう：</p>
+            <pre>
+body {
+  background-color: #f0f8ff;
+}
+
+h1 {
+  color: #4169e1;
+  text-align: center;
+}</pre>
+
+            <h3><span class="step-number">3</span>保存してブラウザで確認</h3>
+            <p>ファイルを保存して、ブラウザを更新（F5キー）してみよう！</p>
+        </div>
+
+        <div class="card">
+            <h2>今日のポイント 💡</h2>
+            <div class="point-box">
+                <ul>
+                    <li><code>background-color</code> → 背景の色</li>
+                    <li><code>color</code> → 文字の色</li>
+                    <li><code>text-align: center</code> → 中央揃え</li>
+                    <li>色は <code>#</code> で始まるカラーコードで指定</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>よく使う色コード 🎨</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>色</th>
+                        <th>コード</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: #ff0000; font-weight: bold;">赤</td>
+                        <td>#ff0000</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #0000ff; font-weight: bold;">青</td>
+                        <td>#0000ff</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #00ff00; font-weight: bold;">緑</td>
+                        <td>#00ff00</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #cccc00; font-weight: bold;">黄</td>
+                        <td>#ffff00</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #ffc0cb; font-weight: bold;">ピンク</td>
+                        <td>#ffc0cb</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #ffa500; font-weight: bold;">オレンジ</td>
+                        <td>#ffa500</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>チャレンジ問題 🌟</h2>
+            <ol>
+                <li>背景を自分の好きな色に変えてみよう</li>
+                <li>文字の大きさを変えてみよう（ヒント：<code>font-size: 48px;</code>）</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h2>理解度チェック ✅</h2>
+            <div class="check-box">
+                <p>クイズに答えてみよう！正解だと思うものを選んで「答え合わせ」ボタンを押してね。</p>
+                <form id="quizForm">
+                    <div class="quiz-item">
+                        <p class="question">Q1. HTMLの中にCSSを書くために使うタグはどれ？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="incorrect"> &lt;css&gt;</label>
+                            <label><input type="radio" name="q1" value="correct"> &lt;style&gt;</label>
+                            <label><input type="radio" name="q1" value="incorrect"> &lt;script&gt;</label>
+                        </div>
+                        <div class="feedback" id="feedback-q1"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q2. &lt;style&gt; タグはどこの中に入れるのが正しい？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="incorrect"> &lt;body&gt; の中</label>
+                            <label><input type="radio" name="q2" value="correct"> &lt;head&gt; の中</label>
+                            <label><input type="radio" name="q2" value="incorrect"> &lt;html&gt; の外</label>
+                        </div>
+                        <div class="feedback" id="feedback-q2"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q3. 文字の色を変えるためのプロパティは？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q3" value="incorrect"> font-color</label>
+                            <label><input type="radio" name="q3" value="incorrect"> text-color</label>
+                            <label><input type="radio" name="q3" value="correct"> color</label>
+                        </div>
+                        <div class="feedback" id="feedback-q3"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q4. 背景の色を変えるためのプロパティは？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q4" value="correct"> background-color</label>
+                            <label><input type="radio" name="q4" value="incorrect"> back-color</label>
+                            <label><input type="radio" name="q4" value="incorrect"> bg-color</label>
+                        </div>
+                        <div class="feedback" id="feedback-q4"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q5. text-align: center; を指定すると、文字はどうなる？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q5" value="incorrect"> 右に寄る</label>
+                            <label><input type="radio" name="q5" value="correct"> 真ん中に寄る（中央揃え）</label>
+                            <label><input type="radio" name="q5" value="incorrect"> 太文字になる</label>
+                        </div>
+                        <div class="feedback" id="feedback-q5"></div>
+                    </div>
+
+                    <button type="button" class="check-btn" onclick="checkAnswers()">答え合わせをする！</button>
+                    <div id="total-score"></div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>今日のアウトプット ✅</h2>
+            <ul>
+                <li><input type="checkbox"> タイトルの色が変わった</li>
+                <li><input type="checkbox"> 背景色がついた</li>
+                <li><input type="checkbox"> 文字が中央揃えになった</li>
+            </ul>
+        </div>
+
+        <div class="navigation">
+            <a href="lesson01.html" class="nav-btn prev">← 前のレッスン</a>
+            <a href="index.html" class="nav-btn top">目次へ</a>
+            <a href="lesson03.html" class="nav-btn next">次のレッスン →</a>
+        </div>
+
+    </div>
+
+    <script>
+        function checkAnswers() {
+            let score = 0;
+            const total = 5;
+
+            score += checkQuestion('q1', '正解！スタイル（見た目）を決めるから <style> タグだよ！');
+            score += checkQuestion('q2', '正解！設定を書く場所である <head> の中に入れるのが基本だよ！');
+            score += checkQuestion('q3', '正解！シンプルに color だけで文字色が変わるよ！');
+            score += checkQuestion('q4', '正解！background（背景）+ color（色）で覚えると簡単だね！');
+            score += checkQuestion('q5', '正解！center は「中心」という意味だね！');
+
+            const scoreDiv = document.getElementById('total-score');
+            if (score === total) {
+                scoreDiv.innerHTML = `<p class="perfect">すごい！ ${total}問中 ${score}問正解！ バッチリだね！🎉</p>`;
+            } else {
+                scoreDiv.innerHTML = `<p>おしい！ ${total}問中 ${score}問正解。もうちょっと！💪</p>`;
+            }
+        }
+
+        function checkQuestion(name, explanation) {
+            const options = document.getElementsByName(name);
+            const feedback = document.getElementById('feedback-' + name);
+            let isCorrect = false;
+            let isSelected = false;
+
+            for (const option of options) {
+                if (option.checked) {
+                    isSelected = true;
+                    if (option.value === 'correct') {
+                        isCorrect = true;
+                    }
+                }
+            }
+
+            if (!isSelected) {
+                feedback.innerHTML = '<span class="incorrect">まだ選んでないよ！</span>';
+                feedback.className = 'feedback show';
+                return 0;
+            }
+
+            if (isCorrect) {
+                feedback.innerHTML = '<span class="correct">正解！⭕</span> ' + explanation;
+                feedback.className = 'feedback show correct-bg';
+                return 1;
+            } else {
+                feedback.innerHTML = '<span class="incorrect">ざんねん...❌</span> 違うみたい。もう一度ヒントを探してみよう！';
+                feedback.className = 'feedback show incorrect-bg';
+                return 0;
+            }
+        }
+    </script>
+</body>
+
+</html>

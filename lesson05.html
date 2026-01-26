@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第5回：JavaScriptって何？ - 時間割アプリを作ろう</title>
+    <style>
+        :root {
+            --primary: #fca5a5;
+            --primary-light: #fecaca;
+            --secondary: #fbbf24;
+            --bg: #fff1f2;
+            --text: #1f2937;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            margin-bottom: 40px;
+        }
+
+        .hero img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #ef4444;
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            color: #d97706;
+            margin-top: 25px;
+        }
+
+        .goal-box {
+            background-color: #fff1f2;
+            border-left: 5px solid #ef4444;
+            padding: 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .point-box {
+            background-color: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .check-box {
+            background-color: #d1fae5;
+            border-left: 5px solid #10b981;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        code {
+            background-color: #1f2937;
+            color: #fbbf24;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: monospace;
+            position: relative;
+        }
+
+        pre::before {
+            content: "CODE";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #ef4444;
+            color: white;
+            padding: 5px 10px;
+            border-bottom-left-radius: 10px;
+            border-top-right-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+        .diagram {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .diagram img {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-height: 400px;
+        }
+
+        ul,
+        ol {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #d97706;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero {
+                padding: 60px 20px;
+            }
+        }
+
+        /* Quiz Styles */
+        .quiz-item {
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .question {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--text);
+            font-size: 1.1rem;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+
+        .options label:hover {
+            background-color: #fee2e2;
+            border-color: #fca5a5;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .check-btn {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3);
+        }
+
+        .check-btn:hover {
+            background-color: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(239, 68, 68, 0.4);
+        }
+
+        .check-btn:active {
+            transform: translateY(0);
+        }
+
+        .feedback {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .correct {
+            color: #059669;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .incorrect {
+            color: #dc2626;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .correct-bg {
+            background-color: #ecfdf5;
+            border: 2px solid #10b981;
+        }
+
+        .incorrect-bg {
+            background-color: #fef2f2;
+            border: 2px solid #ef4444;
+        }
+
+        #total-score {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .perfect {
+            color: #ea580c;
+            background-color: #fff7ed;
+            border: 2px dashed #ea580c;
+            padding: 20px;
+            display: inline-block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Navigation Styles */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 20px;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            color: var(--text);
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            background: #f9fafb;
+        }
+
+        .nav-btn.prev {
+            color: #64748b;
+        }
+
+        .nav-btn.next {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .nav-btn.top {
+            color: var(--text);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hero">
+        <div class="container">
+            <h1>第5回：JavaScriptって何？<br>最初のプログラム</h1>
+            <img src="images/lesson05_header.png" alt="JavaScriptプログラミングのイラスト">
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+            <h2>今日のゴール 🎯</h2>
+            <div class="goal-box">
+                ボタンを押すとメッセージが表示されるページを作る！
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>学ぶこと 📚</h2>
+            <ul>
+                <li>JavaScriptでできること</li>
+                <li>メッセージを表示する方法</li>
+                <li>ボタンを追加する方法</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>やってみよう！ 💻</h2>
+
+            <h3><span class="step-number">1</span>ボタンを追加しよう</h3>
+            <p><code>&lt;/table&gt;</code> の下に以下を追加：</p>
+            <pre>
+&lt;button id="helloButton"&gt;あいさつする&lt;/button&gt;</pre>
+
+            <h3><span class="step-number">2</span>JavaScriptを書く場所を作ろう</h3>
+            <p><code>&lt;/body&gt;</code> の直前に <code>&lt;script&gt;</code> タグを追加：</p>
+            <pre>
+  &lt;script&gt;
+    // ここにJavaScriptを書くよ
+  &lt;/script&gt;
+&lt;/body&gt;</pre>
+
+            <h3><span class="step-number">3</span>ボタンをクリックしたら動くようにしよう</h3>
+            <pre>
+&lt;script&gt;
+  // ボタンを取得
+  const button = document.getElementById('helloButton');
+  
+  // クリックしたら実行
+  button.onclick = function() {
+    alert('こんにちは！時間割アプリへようこそ！');
+  };
+&lt;/script&gt;</pre>
+        </div>
+
+        <div class="card">
+            <h2>今日のポイント 💡</h2>
+            <div class="point-box">
+                <ul>
+                    <li><code>document.getElementById</code> → HTMLの要素を取得する</li>
+                    <li><code>onclick</code> → クリックした時に動く</li>
+                    <li><code>alert</code> → ポップアップでメッセージを表示</li>
+                    <li><code>function() { }</code> → 実行したい処理を書く場所</li>
+                    <li><code>//</code> → コメント（メモ書き、実行されない）</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>開発者ツールを使ってみよう 🔧</h2>
+            <ol>
+                <li>ブラウザでF12キーを押す</li>
+                <li>「Console（コンソール）」タブを開く</li>
+                <li><code>console.log('Hello!');</code> と入力してEnter</li>
+                <li>メッセージが表示される！</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h2>チャレンジ問題 🌟</h2>
+            <ol>
+                <li>メッセージの内容を自分の好きな言葉に変えてみよう</li>
+                <li><code>console.log('時間割アプリ開発中！');</code> を追加してみよう</li>
+                <li>もう1つボタンを追加して、違うメッセージを表示してみよう</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h2>理解度チェック ✅</h2>
+            <div class="check-box">
+                <p>クイズに答えてみよう！正解だと思うものを選んで「答え合わせ」ボタンを押してね。</p>
+                <form id="quizForm">
+                    <div class="quiz-item">
+                        <p class="question">Q1. HTMLの中にJavaScriptを書くために使うタグはどれ？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="incorrect"> &lt;js&gt;</label>
+                            <label><input type="radio" name="q1" value="correct"> &lt;script&gt;</label>
+                            <label><input type="radio" name="q1" value="incorrect"> &lt;code&gt;</label>
+                        </div>
+                        <div class="feedback" id="feedback-q1"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q2. HTMLの要素をIDを使って取得する命令は？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="correct"> document.getElementById</label>
+                            <label><input type="radio" name="q2" value="incorrect"> document.getElement</label>
+                            <label><input type="radio" name="q2" value="incorrect"> document.findId</label>
+                        </div>
+                        <div class="feedback" id="feedback-q2"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q3. クリックした時の動作を決めるためのプロパティは？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q3" value="incorrect"> onpress</label>
+                            <label><input type="radio" name="q3" value="correct"> onclick</label>
+                            <label><input type="radio" name="q3" value="incorrect"> onpush</label>
+                        </div>
+                        <div class="feedback" id="feedback-q3"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q4. 画面にポップアップメッセージを表示する命令は？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q4" value="correct"> alert</label>
+                            <label><input type="radio" name="q4" value="incorrect"> message</label>
+                            <label><input type="radio" name="q4" value="incorrect"> poppy</label>
+                        </div>
+                        <div class="feedback" id="feedback-q4"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q5. console.log で出力したメッセージを確認できるブラウザの機能は何？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q5" value="incorrect"> 設定画面</label>
+                            <label><input type="radio" name="q5" value="correct"> 開発者ツール（デベロッパーツール）</label>
+                            <label><input type="radio" name="q5" value="incorrect"> 履歴</label>
+                        </div>
+                        <div class="feedback" id="feedback-q5"></div>
+                    </div>
+
+                    <button type="button" class="check-btn" onclick="checkAnswers()">答え合わせをする！</button>
+                    <div id="total-score"></div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>今日のアウトプット ✅</h2>
+            <ul>
+                <li><input type="checkbox"> ボタンが表示された</li>
+                <li><input type="checkbox"> ボタンをクリックするとメッセージが出る</li>
+                <li><input type="checkbox"> 開発者ツールでconsole.logを試した</li>
+            </ul>
+        </div>
+
+        <div class="navigation">
+            <a href="lesson04.html" class="nav-btn prev">← 前のレッスン</a>
+            <a href="index.html" class="nav-btn top">目次へ</a>
+            <a href="lesson06.html" class="nav-btn next">次のレッスン →</a>
+        </div>
+
+    </div>
+
+    <script>
+        function checkAnswers() {
+            let score = 0;
+            const total = 5;
+
+            score += checkQuestion('q1', '正解！script（スクリプト）は台本という意味もあるね！');
+            score += checkQuestion('q2', '正解！Get Element By Id（IDによって要素を取得する）という意味だよ！');
+            score += checkQuestion('q3', '正解！on（〜した時）click（クリック）だね！');
+            score += checkQuestion('q4', '正解！アラート（警告・通知）を表示するよ！');
+            score += checkQuestion('q5', '正解！F12キーで開ける魔法のツールだよ！');
+
+            const scoreDiv = document.getElementById('total-score');
+            if (score === total) {
+                scoreDiv.innerHTML = `<p class="perfect">すごい！ ${total}問中 ${score}問正解！ 君もプログラマーだ！🎉</p>`;
+            } else {
+                scoreDiv.innerHTML = `<p>おしい！ ${total}問中 ${score}問正解。もう一度見直してみよう！💪</p>`;
+            }
+        }
+
+        function checkQuestion(name, explanation) {
+            const options = document.getElementsByName(name);
+            const feedback = document.getElementById('feedback-' + name);
+            let isCorrect = false;
+            let isSelected = false;
+
+            for (const option of options) {
+                if (option.checked) {
+                    isSelected = true;
+                    if (option.value === 'correct') {
+                        isCorrect = true;
+                    }
+                }
+            }
+
+            if (!isSelected) {
+                feedback.innerHTML = '<span class="incorrect">まだ選んでないよ！</span>';
+                feedback.className = 'feedback show';
+                return 0;
+            }
+
+            if (isCorrect) {
+                feedback.innerHTML = '<span class="correct">正解！⭕</span> ' + explanation;
+                feedback.className = 'feedback show correct-bg';
+                return 1;
+            } else {
+                feedback.innerHTML = '<span class="incorrect">ざんねん...❌</span> 違うみたい。コードをよく見てみよう！';
+                feedback.className = 'feedback show incorrect-bg';
+                return 0;
+            }
+        }
+    </script>
+</body>
+
+</html>

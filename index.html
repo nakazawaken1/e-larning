@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>時間割アプリを作ろう - プログラミング入門コース</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #ec4899;
+            --secondary-light: #f472b6;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary), #4338ca);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin: 0 0 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            color: var(--text);
+            margin-bottom: 40px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--secondary);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        .lesson-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .lesson-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: var(--text);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-light);
+        }
+
+        .card-header {
+            background: #f1f5f9;
+            padding: 15px 20px;
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-body {
+            padding: 25px;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            margin: 0 0 10px;
+            font-weight: bold;
+            color: #1e293b;
+        }
+
+        .card-desc {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin: 0 0 15px;
+        }
+
+        .tag-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .tag.html {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .tag.css {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .tag.js {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .tag.app {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .start-btn {
+            display: inline-block;
+            background: white;
+            color: var(--primary);
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-decoration: none;
+            margin-top: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.05);
+            background: #eff6ff;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-icon {
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 0 15px 40px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hero">
+        <div class="container">
+            <h1>時間割アプリを作ろう</h1>
+            <p>HTML、CSS、JavaScriptを使って、<br>君だけのオリジナル時間割アプリを開発しよう！</p>
+            <a href="lesson01.html" class="start-btn">学習を始める 🚀</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="section-title">カリキュラム一覧</h2>
+
+        <div class="lesson-grid">
+
+            <!-- Lesson 1 -->
+            <a href="lesson01.html" class="lesson-card">
+                <div class="card-header">
+                    <span>Lesson 01</span>
+                    <span class="status-icon">📄</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">はじめてのHTML</h3>
+                    <p class="card-desc">Webページの骨組みとなるHTMLの基本を学び、時間割のベースを作ります。</p>
+                    <div class="tag-container">
+                        <span class="tag html">HTML</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Lesson 2 -->
+            <a href="lesson02.html" class="lesson-card">
+                <div class="card-header">
+                    <span>Lesson 02</span>
+                    <span class="status-icon">🎨</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">はじめてのCSS</h3>
+                    <p class="card-desc">文字の色や背景色を変えて、ページをきれいにデザインします。</p>
+                    <div class="tag-container">
+                        <span class="tag css">CSS</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Lesson 3 -->
+            <a href="lesson03.html" class="lesson-card">
+                <div class="card-header">
+                    <span>Lesson 03</span>
+                    <span class="status-icon">📊</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">表（テーブル）を作ろう</h3>
+                    <p class="card-desc">HTMLのテーブルタグを使って、時間割の形を作っていきます。</p>
+                    <div class="tag-container">
+                        <span class="tag html">HTML</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Lesson 4 -->
+            <a href="lesson04.html" class="lesson-card">
+                <div class="card-header">
+                    <span>Lesson 04</span>
+                    <span class="status-icon">💅</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">表のデザイン</h3>
+                    <p class="card-desc">CSSを使って表に線を引いたり、色をつけて見やすくします。</p>
+                    <div class="tag-container">
+                        <span class="tag css">CSS</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Lesson 5 -->
+            <a href="lesson05.html" class="lesson-card">
+                <div class="card-header">
+                    <span>Lesson 05</span>
+                    <span class="status-icon">⚡</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">JavaScript入門</h3>
+                    <p class="card-desc">ボタンを押すと何かが起きる！「動き」をつけるプログラミングに挑戦。</p>
+                    <div class="tag-container">
+                        <span class="tag js">JavaScript</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Lesson 6 -->
+            <a href="lesson06.html" class="lesson-card">
+                <div class="card-header">
+                    <span>Lesson 06</span>
+                    <span class="status-icon">🖱️</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">入力機能を作る</h3>
+                    <p class="card-desc">クリックして好きな教科を入力できるインタラクティブな機能を作ります。</p>
+                    <div class="tag-container">
+                        <span class="tag js">JavaScript</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Lesson 7 -->
+            <a href="lesson07.html" class="lesson-card">
+                <div class="card-header">
+                    <span>Lesson 07</span>
+                    <span class="status-icon">🔽</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">セレクトボックス</h3>
+                    <p class="card-desc">教科を選んで入力できるように、ドロップダウンメニューを作ります。</p>
+                    <div class="tag-container">
+                        <span class="tag js">JavaScript</span>
+                        <span class="tag html">HTML</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Lesson 8 -->
+            <a href="lesson08.html" class="lesson-card">
+                <div class="card-header">
+                    <span>Lesson 08</span>
+                    <span class="status-icon">💾</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">データを保存しよう</h3>
+                    <p class="card-desc">ブラウザを閉じてもデータが消えないように「ローカルストレージ」を使います。</p>
+                    <div class="tag-container">
+                        <span class="tag js">JavaScript</span>
+                        <span class="tag app">Data</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Lesson 9 -->
+            <a href="lesson09.html" class="lesson-card">
+                <div class="card-header">
+                    <span>Lesson 09</span>
+                    <span class="status-icon">📂</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">データを読み込もう</h3>
+                    <p class="card-desc">保存したデータを、ページを開いた時に自動で表示させます。</p>
+                    <div class="tag-container">
+                        <span class="tag js">JavaScript</span>
+                        <span class="tag app">Data</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Lesson 10 -->
+            <a href="lesson10.html" class="lesson-card">
+                <div class="card-header">
+                    <span>Lesson 10</span>
+                    <span class="status-icon">🗑️</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">リセット機能</h3>
+                    <p class="card-desc">やり直したい時のために、データを全消去するボタンを追加します。</p>
+                    <div class="tag-container">
+                        <span class="tag js">JavaScript</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Lesson 11 -->
+            <a href="lesson11.html" class="lesson-card">
+                <div class="card-header">
+                    <span>Lesson 11</span>
+                    <span class="status-icon">📱</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">見た目の仕上げ</h3>
+                    <p class="card-desc">アニメーションやスマホ対応を追加して、プロっぽい見た目に仕上げます。</p>
+                    <div class="tag-container">
+                        <span class="tag css">CSS</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Lesson 12 -->
+            <a href="lesson12.html" class="lesson-card">
+                <div class="card-header">
+                    <span>Lesson 12</span>
+                    <span class="status-icon">🎉</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">完成！カスタマイズ</h3>
+                    <p class="card-desc">オリジナルの機能を追加して、世界に一つだけのアプリを完成させよう！</p>
+                    <div class="tag-container">
+                        <span class="tag app">Complete</span>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

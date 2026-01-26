@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第1回：Webページってなに？ - 時間割アプリを作ろう</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #ec4899;
+            --bg: #f3f4f6;
+            --text: #1f2937;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            margin-bottom: 40px;
+        }
+
+        .hero img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 25px;
+        }
+
+        .goal-box {
+            background-color: #e0e7ff;
+            border-left: 5px solid var(--primary);
+            padding: 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .point-box {
+            background-color: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .check-box {
+            background-color: #d1fae5;
+            border-left: 5px solid #10b981;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        code {
+            background-color: #1f2937;
+            color: #fbbf24;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: monospace;
+            position: relative;
+        }
+
+        pre::before {
+            content: "HTML";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            padding: 5px 10px;
+            border-bottom-left-radius: 10px;
+            border-top-right-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+        .diagram {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .diagram img {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-height: 400px;
+        }
+
+        ul,
+        ol {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero {
+                padding: 60px 20px;
+            }
+        }
+
+        /* Quiz Styles */
+        .quiz-item {
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .question {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--text);
+            font-size: 1.1rem;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+
+        .options label:hover {
+            background-color: #e0e7ff;
+            border-color: var(--primary-light);
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .check-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3);
+        }
+
+        .check-btn:hover {
+            background-color: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.4);
+        }
+
+        .check-btn:active {
+            transform: translateY(0);
+        }
+
+        .feedback {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .correct {
+            color: #059669;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .incorrect {
+            color: #dc2626;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .correct-bg {
+            background-color: #ecfdf5;
+            border: 2px solid #10b981;
+        }
+
+        .incorrect-bg {
+            background-color: #fef2f2;
+            border: 2px solid #ef4444;
+        }
+
+        #total-score {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .perfect {
+            color: #ea580c;
+            background-color: #fff7ed;
+            border: 2px dashed #ea580c;
+            padding: 20px;
+            display: inline-block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Navigation Styles */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 20px;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            color: var(--text);
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            background: #f9fafb;
+        }
+
+        .nav-btn.prev {
+            color: #64748b;
+        }
+
+        .nav-btn.next {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .nav-btn.top {
+            color: var(--text);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hero">
+        <div class="container">
+            <h1>第1回：Webページってなに？<br>最初のHTMLファイルを作ろう</h1>
+            <img src="images/header.png" alt="プログラミング教室のイラスト">
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+            <h2>今日のゴール 🎯</h2>
+            <div class="goal-box">
+                「時間割」というタイトルが表示されるWebページを作る！
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>学ぶこと 📚</h2>
+            <ul>
+                <li>Webページはどうやって動いているの？</li>
+                <li>HTMLファイルって何？</li>
+                <li>ブラウザでファイルを開く方法</li>
+            </ul>
+
+            <div class="diagram">
+                <img src="images/structure.png" alt="HTMLの構造図">
+                <p><small>HTMLファイルの構造イメージ</small></p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>やってみよう！ 💻</h2>
+
+            <h3><span class="step-number">1</span>ファイルを作ろう</h3>
+            <ol>
+                <li>パソコンで「メモ帳」（Windowsの場合）または「テキストエディット」（Macの場合）を開く</li>
+                <li>新しいファイルを作って <code>index.html</code> という名前で保存する</li>
+            </ol>
+
+            <h3><span class="step-number">2</span>HTMLを書こう</h3>
+            <p>以下のコードを書いてみよう：</p>
+            <pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;わたしの時間割&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;時間割&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+            <h3><span class="step-number">3</span>ブラウザで開こう</h3>
+            <ol>
+                <li>保存した <code>index.html</code> ファイルをダブルクリック</li>
+                <li>ブラウザに「時間割」と表示されたら成功！</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h2>今日のポイント 💡</h2>
+            <div class="point-box">
+                <ul>
+                    <li><code>&lt;!DOCTYPE html&gt;</code> → 「これはHTMLファイルです」とブラウザに教える</li>
+                    <li><code>&lt;html&gt;</code> → HTML全体を囲む</li>
+                    <li><code>&lt;head&gt;</code> → ページの設定を書く場所</li>
+                    <li><code>&lt;body&gt;</code> → 実際に表示される内容を書く場所</li>
+                    <li><code>&lt;h1&gt;</code> → 一番大きな見出し</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>チャレンジ問題 🌟</h2>
+            <p><code>&lt;h1&gt;時間割&lt;/h1&gt;</code> の下に、自分の名前を <code>&lt;p&gt;</code> タグで追加してみよう！</p>
+            <p>例：</p>
+            <pre>
+&lt;p&gt;○○小学校 ○年○組&lt;/p&gt;</pre>
+        </div>
+
+        <div class="card">
+            <h2>理解度チェック ✅</h2>
+            <div class="check-box">
+                <p>クイズに答えてみよう！正解だと思うものを選んで「答え合わせ」ボタンを押してね。</p>
+                <form id="quizForm">
+                    <div class="quiz-item">
+                        <p class="question">Q1. HTMLファイルの拡張子（ファイルの名前の最後）はどれ？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="incorrect"> .txt</label>
+                            <label><input type="radio" name="q1" value="correct"> .html</label>
+                            <label><input type="radio" name="q1" value="incorrect"> .doc</label>
+                        </div>
+                        <div class="feedback" id="feedback-q1"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q2. 「これはHTMLファイルです」とブラウザに教えるタグは？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="incorrect"> &lt;html&gt;</label>
+                            <label><input type="radio" name="q2" value="correct"> &lt;!DOCTYPE html&gt;</label>
+                            <label><input type="radio" name="q2" value="incorrect"> &lt;body&gt;</label>
+                        </div>
+                        <div class="feedback" id="feedback-q2"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q3. 一番大きな見出しを表示するタグは？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q3" value="correct"> &lt;h1&gt;</label>
+                            <label><input type="radio" name="q3" value="incorrect"> &lt;title&gt;</label>
+                            <label><input type="radio" name="q3" value="incorrect"> &lt;p&gt;</label>
+                        </div>
+                        <div class="feedback" id="feedback-q3"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q4. 実際にブラウザに表示される「中身」を書く場所は？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q4" value="incorrect"> &lt;head&gt;</label>
+                            <label><input type="radio" name="q4" value="correct"> &lt;body&gt;</label>
+                        </div>
+                        <div class="feedback" id="feedback-q4"></div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <p class="question">Q5. ページのタイトルなどの「設定」を書く場所は？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q5" value="correct"> &lt;head&gt;</label>
+                            <label><input type="radio" name="q5" value="incorrect"> &lt;body&gt;</label>
+                        </div>
+                        <div class="feedback" id="feedback-q5"></div>
+                    </div>
+
+                    <button type="button" class="check-btn" onclick="checkAnswers()">答え合わせをする！</button>
+                    <div id="total-score"></div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>今日のアウトプット ✅</h2>
+            <ul>
+                <li><input type="checkbox"> <code>index.html</code> ファイルを作成した</li>
+                <li><input type="checkbox"> ブラウザで「時間割」というタイトルが表示された</li>
+            </ul>
+        </div>
+
+        <div class="navigation">
+            <span class="nav-btn prev" style="visibility: hidden">← 前のレッスン</span>
+            <a href="index.html" class="nav-btn top">目次へ</a>
+            <a href="lesson02.html" class="nav-btn next">次のレッスン →</a>
+        </div>
+
+    </div>
+
+    <script>
+        function checkAnswers() {
+            let score = 0;
+            const total = 5;
+
+            // 各問題のチェック
+            score += checkQuestion('q1', 'HTMLファイルなので .html が正解！');
+            score += checkQuestion('q2', '<!DOCTYPE html> が宣言のタグだよ！');
+            score += checkQuestion('q3', '<h1> (Heading 1) が一番大きな見出しだよ！');
+            score += checkQuestion('q4', '目に見える体（からだ）の部分だから <body> だよ！');
+            score += checkQuestion('q5', '頭（あたま）の中で考える設定だから <head> だよ！');
+
+            const scoreDiv = document.getElementById('total-score');
+            if (score === total) {
+                scoreDiv.innerHTML = `<p class="perfect">すごい！ ${total}問中 ${score}問正解！ 全問正解おめでとう！🎉</p>`;
+            } else {
+                scoreDiv.innerHTML = `<p>おしい！ ${total}問中 ${score}問正解。もう一度見直してみよう！💪</p>`;
+            }
+        }
+
+        function checkQuestion(name, explanation) {
+            const options = document.getElementsByName(name);
+            const feedback = document.getElementById('feedback-' + name);
+            let isCorrect = false;
+            let isSelected = false;
+
+            for (const option of options) {
+                if (option.checked) {
+                    isSelected = true;
+                    if (option.value === 'correct') {
+                        isCorrect = true;
+                    }
+                }
+            }
+
+            if (!isSelected) {
+                feedback.innerHTML = '<span class="incorrect">まだ選んでないよ！</span>';
+                feedback.className = 'feedback show';
+                return 0;
+            }
+
+            if (isCorrect) {
+                feedback.innerHTML = '<span class="correct">正解！⭕</span> ' + explanation;
+                feedback.className = 'feedback show correct-bg';
+                return 1;
+            } else {
+                feedback.innerHTML = '<span class="incorrect">ざんねん...❌</span> 違うみたい。前の方を読み返してみよう！';
+                feedback.className = 'feedback show incorrect-bg';
+                return 0;
+            }
+        }
+    </script>
