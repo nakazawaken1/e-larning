@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>わたしの図鑑</title>
+    <style>
+        body {
+            background-color: #f0f8ff;
+            font-family: sans-serif;
+        }
+
+        h1 {
+            color: #2e8b57;
+            text-align: center;
+        }
+
+        h2 {
+            color: #ff6347;
+            margin-top: 5px;
+        }
+
+        .zukan-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: white;
+            width: 250px;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s ease;
+        }
+
+        img {
+            border-radius: 8px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            color: #666;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>わたしの図鑑</h1>
+
+    <div id="zukan-container" class="zukan-container">
+    </div>
+
+    <script>
+        let zukanData = [
+            {
+                name: "アサガオ",
+                image: "https://placehold.jp/240x180.png?text=アサガオ",
+                description: "夏にきれいに咲く花です。",
+                place: "学校の花壇",
+                date: "7月20日"
+            },
+            {
+                name: "カブトムシ",
+                image: "https://placehold.jp/240x180.png?text=カブトムシ",
+                description: "かっこいいツノがある夏の虫です。",
+                place: "近くの森",
+                date: "8月5日"
+            }
+        ];
+
+        let container = document.getElementById("zukan-container");
+
+        zukanData.forEach(function (ikimono) {
+            let cardHTML = `
+        <div class="card" onclick="alert('${ikimono.name}だよ！')">
+          <h2>${ikimono.name}</h2>
+          <img src="${ikimono.image}" alt="${ikimono.name}の写真" width="200">
+          <p>${ikimono.description}</p>
+          <ul>
+            <li>📍 場所：${ikimono.place}</li>
+            <li>📅 日付：${ikimono.date}</li>
+          </ul>
+        </div>
+      `;
+            container.innerHTML += cardHTML;
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>図鑑Webサービス教材 - 全12回</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f0f8ff;
+            font-family: sans-serif;
+        }
+
+        header {
+            background-color: #2e8b57;
+            color: white;
+            text-align: center;
+            padding: 32px 20px;
+        }
+
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .lesson-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            padding: 32px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .lesson-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 280px;
+            padding: 20px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+            display: block;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .lesson-number {
+            font-size: 0.8em;
+            font-weight: bold;
+            color: white;
+            background-color: #2e8b57;
+            border-radius: 20px;
+            padding: 2px 12px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .lesson-card h2 {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .lesson-card p {
+            font-size: 0.85em;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .lesson-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            flex: 1;
+            text-align: center;
+            padding: 6px 0;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .btn-md {
+            background-color: #e8f5e9;
+            color: #2e8b57;
+            border: 1px solid #2e8b57;
+        }
+
+        .btn-html {
+            background-color: #fff3e0;
+            color: #e67e22;
+            border: 1px solid #e67e22;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 24px;
+            color: #999;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>🌿 図鑑Webサービスを作ろう！ 🐛</h1>
+        <p>草花・虫の写真を登録してタイル表示できる図鑑を全12回で作るコース</p>
+    </header>
+
+    <div class="lesson-grid">
+
+        <a class="lesson-card" href="#">
+            <span class="lesson-number">第1回</span>
+            <h2>図鑑のベースを作ろう！</h2>
+            <p>HTMLファイルを作って、図鑑のタイトルを表示しよう。Webページの仕組みを学ぶ第一歩！</p>
+            <div class="lesson-links">
+                <a class="btn btn-md" href="lesson01.md">📄 テキスト</a>
+                <a class="btn btn-html" href="lesson01.html">🌐 HTML</a>
+            </div>
+        </a>
+
+        <a class="lesson-card" href="#">
+            <span class="lesson-number">第2回</span>
+            <h2>図鑑の説明を書こう！</h2>
+            <p>生き物の名前・説明・場所をテキストや箇条書きで表示してみよう。</p>
+            <div class="lesson-links">
+                <a class="btn btn-md" href="lesson02.md">📄 テキスト</a>
+                <a class="btn btn-html" href="lesson02.html">🌐 HTML</a>
+            </div>
+        </a>
+
+        <a class="lesson-card" href="#">
+            <span class="lesson-number">第3回</span>
+            <h2>図鑑に色をつけよう！</h2>
+            <p>CSSを使って文字や背景に自分の好きな色をつけてみよう。</p>
+            <div class="lesson-links">
+                <a class="btn btn-md" href="lesson03.md">📄 テキスト</a>
+                <a class="btn btn-html" href="lesson03.html">🌐 HTML</a>
+            </div>
+        </a>
+
+        <a class="lesson-card" href="#">
+            <span class="lesson-number">第4回</span>
+            <h2>草花や虫の写真を入れよう！</h2>
+            <p>imgタグを使って画像を表示し、図鑑らしくしていこう。</p>
+            <div class="lesson-links">
+                <a class="btn btn-md" href="lesson04.md">📄 テキスト</a>
+                <a class="btn btn-html" href="lesson04.html">🌐 HTML</a>
+            </div>
+        </a>
+
+        <a class="lesson-card" href="#">
+            <span class="lesson-number">第5回</span>
+            <h2>図鑑っぽくタイル状に並べよう！</h2>
+            <p>divとFlexboxを使って、生き物のカードを横にタイル状に並べよう。</p>
+            <div class="lesson-links">
+                <a class="btn btn-md" href="lesson05.md">📄 テキスト</a>
+                <a class="btn btn-html" href="lesson05.html">🌐 HTML</a>
+            </div>
+        </a>
+
+        <a class="lesson-card" href="#">
+            <span class="lesson-number">第6回</span>
+            <h2>図鑑のデザインをかっこよくしよう！</h2>
+            <p>角丸・影・余白を追加して、本物のアプリみたいなデザインに仕上げよう。</p>
+            <div class="lesson-links">
+                <a class="btn btn-md" href="lesson06.md">📄 テキスト</a>
+                <a class="btn btn-html" href="lesson06.html">🌐 HTML</a>
+            </div>
+        </a>
+
+        <a class="lesson-card" href="#">
+            <span class="lesson-number">第7回</span>
+            <h2>JavaScriptって？</h2>
+            <p>Webページを動かすJavaScriptの基本を学ぼう。変数やコンソールを体験！</p>
+            <div class="lesson-links">
+                <a class="btn btn-md" href="lesson07.md">📄 テキスト</a>
+                <a class="btn btn-html" href="lesson07.html">🌐 HTML</a>
+            </div>
+        </a>
+
+        <a class="lesson-card" href="#">
+            <span class="lesson-number">第8回</span>
+            <h2>写真をクリックして動かそう！</h2>
+            <p>onclickイベントとalertを使って、クリックに反応するページを作ろう。</p>
+            <div class="lesson-links">
+                <a class="btn btn-md" href="lesson08.md">📄 テキスト</a>
+                <a class="btn btn-html" href="lesson08.html">🌐 HTML</a>
+            </div>
+        </a>
+
+        <a class="lesson-card" href="#">
+            <span class="lesson-number">第9回</span>
+            <h2>データをJavaScriptで持とう！</h2>
+            <p>配列とオブジェクトで、図鑑の情報をJavaScript側でまとめて管理しよう。</p>
+            <div class="lesson-links">
+                <a class="btn btn-md" href="lesson09.md">📄 テキスト</a>
+                <a class="btn btn-html" href="lesson09.html">🌐 HTML</a>
+            </div>
+        </a>
+
+        <a class="lesson-card" href="#">
+            <span class="lesson-number">第10回</span>
+            <h2>データから図鑑のタイルを作ろう！</h2>
+            <p>forEachとinnerHTMLで、JavaScriptのデータから自動的にHTML要素を生成しよう。</p>
+            <div class="lesson-links">
+                <a class="btn btn-md" href="lesson10.md">📄 テキスト</a>
+                <a class="btn btn-html" href="lesson10.html">🌐 HTML</a>
+            </div>
+        </a>
+
+        <a class="lesson-card" href="#">
+            <span class="lesson-number">第11回</span>
+            <h2>図鑑に新しい生き物を追加しよう！</h2>
+            <p>入力フォームを作って、ボタンを押すと図鑑に追加できるようにしよう。</p>
+            <div class="lesson-links">
+                <a class="btn btn-md" href="lesson11.md">📄 テキスト</a>
+                <a class="btn btn-html" href="lesson11.html">🌐 HTML</a>
+            </div>
+        </a>
+
+        <a class="lesson-card" href="#">
+            <span class="lesson-number">第12回</span>
+            <h2>オリジナル図鑑の完成！🎉</h2>
+            <p>全12回の総まとめ！完成した図鑑をカスタマイズして、自分だけの作品にしよう。</p>
+            <div class="lesson-links">
+                <a class="btn btn-md" href="lesson12.md">📄 テキスト</a>
+                <a class="btn btn-html" href="lesson12.html">🌐 HTML</a>
+            </div>
+        </a>
+
+    </div>
+
+    <footer>
+        <p>🌱 図鑑Webサービス教材 | HTML / CSS / JavaScript で作るプログラミング入門</p>
+    </footer>
+</body>
+
+</html>
