@@ -1,186 +1,501 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
 <head>
     <meta charset="UTF-8">
-    <title>わたしの図鑑</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第11回：図鑑に新しい生き物を追加しよう！ - 図鑑Webサービスを作ろう</title>
     <style>
+        :root {
+            --primary: #2e8b57;
+            --primary-light: #52b788;
+            --secondary: #ff6347;
+            --bg: #f0f8ff;
+            --text: #1f2937;
+        }
+
         body {
-            background-color: #f0f8ff;
-            font-family: sans-serif;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
         }
 
-        h1 {
-            color: #2e8b57;
-            text-align: center;
-            padding-top: 20px;
-        }
-
-        h2 {
-            color: #ff6347;
-            margin-top: 5px;
-        }
-
-        .add-form {
-            background-color: white;
-            max-width: 500px;
-            margin: 20px auto;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .add-form h2 {
-            color: #2e8b57;
-        }
-
-        .add-form input {
-            display: block;
-            width: 80%;
-            margin: 8px auto;
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .add-form button {
-            margin-top: 12px;
-            padding: 10px 24px;
-            background-color: #2e8b57;
+        .hero {
+            background: linear-gradient(135deg, #b45309, #d97706);
             color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            margin-bottom: 40px;
         }
 
-        .add-form button:hover {
-            background-color: #236b43;
+        .hero h1 {
+            font-size: 1.8rem;
+            margin: 0;
         }
 
-        .zukan-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            padding: 20px;
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
         }
 
         .card {
-            background-color: white;
-            width: 250px;
-            padding: 15px;
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.4rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 25px;
+        }
+
+        .goal-box {
+            background-color: #d1fae5;
+            border-left: 5px solid var(--primary);
+            padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .point-box {
+            background-color: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .check-box {
+            background-color: #e0f2fe;
+            border-left: 5px solid #0284c7;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        code {
+            background-color: #1f2937;
+            color: #fbbf24;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: monospace;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        pre.html-code::before {
+            content: "HTML";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            padding: 5px 10px;
+            border-bottom-left-radius: 10px;
+            border-top-right-radius: 10px;
+            font-size: 0.8rem;
+            font-family: sans-serif;
+        }
+
+        pre.js-code::before {
+            content: "JavaScript";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #b45309;
+            color: white;
+            padding: 5px 10px;
+            border-bottom-left-radius: 10px;
+            border-top-right-radius: 10px;
+            font-size: 0.8rem;
+            font-family: sans-serif;
+        }
+
+        pre.css-code::before {
+            content: "CSS";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #2563eb;
+            color: white;
+            padding: 5px 10px;
+            border-bottom-left-radius: 10px;
+            border-top-right-radius: 10px;
+            font-size: 0.8rem;
+            font-family: sans-serif;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
             text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            line-height: 28px;
+            margin-right: 8px;
+            font-weight: bold;
         }
 
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-        }
-
-        img {
-            border-radius: 8px;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            color: #666;
-            font-size: 14px;
-            text-align: left;
+        ul,
+        ol {
+            padding-left: 20px;
         }
 
         li {
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .quiz-item {
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .question {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+
+        .options label:hover {
+            background-color: #d1fae5;
+            border-color: var(--primary-light);
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .check-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s;
+        }
+
+        .check-btn:hover {
+            background-color: #236b43;
+            transform: translateY(-2px);
+        }
+
+        .feedback {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .correct {
+            color: #059669;
+            font-weight: bold;
+        }
+
+        .incorrect {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .correct-bg {
+            background-color: #ecfdf5;
+            border: 2px solid #10b981;
+        }
+
+        .incorrect-bg {
+            background-color: #fef2f2;
+            border: 2px solid #ef4444;
+        }
+
+        #total-score {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .perfect {
+            color: #ea580c;
+            background-color: #fff7ed;
+            border: 2px dashed #ea580c;
+            padding: 20px;
+            display: inline-block;
+            border-radius: 10px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 20px;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            color: var(--text);
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.next {
+            color: var(--primary);
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
-    <h1>わたしの図鑑</h1>
-
-    <div class="add-form">
-        <h2>🐾 生き物を追加する</h2>
-        <input id="input-name" type="text" placeholder="名前（例：タンポポ）">
-        <input id="input-place" type="text" placeholder="場所（例：公園）">
-        <input id="input-date" type="text" placeholder="日付（例：3月5日）">
-        <input id="input-memo" type="text" placeholder="メモ（例：黄色い花）">
-        <button onclick="addIkimono()">追加する！</button>
-    </div>
-
-    <div id="zukan-container" class="zukan-container"></div>
-
-    <script>
-        let zukanData = [
-            {
-                name: "アサガオ",
-                image: "https://placehold.jp/240x180.png?text=アサガオ",
-                description: "夏にきれいに咲く花です。",
-                place: "学校の花壇",
-                date: "7月20日"
-            },
-            {
-                name: "カブトムシ",
-                image: "https://placehold.jp/240x180.png?text=カブトムシ",
-                description: "かっこいいツノがある夏の虫です。",
-                place: "近くの森",
-                date: "8月5日"
-            }
-        ];
-
-        let container = document.getElementById("zukan-container");
-
-        // カードを1つ描く関数
-        function renderCard(ikimono) {
-            let cardHTML = `
-        <div class="card" onclick="alert('${ikimono.name}だよ！')">
-          <h2>${ikimono.name}</h2>
-          <img src="${ikimono.image}" alt="${ikimono.name}の写真" width="200">
-          <p>${ikimono.description}</p>
-          <ul>
-            <li>📍 場所：${ikimono.place}</li>
-            <li>📅 日付：${ikimono.date}</li>
-          </ul>
+    <div class="hero">
+        <div class="container">
+            <h1>第11回：図鑑に新しい<br>生き物を追加しよう！</h1>
         </div>
-      `;
-            container.innerHTML += cardHTML;
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2>今日のゴール 🎯</h2>
+            <div class="goal-box">フォームに情報を入力して「追加」ボタンを押すと、図鑑にタイルが増えるようにする！</div>
+        </div>
+        <div class="card">
+            <h2>学ぶこと 📚</h2>
+            <ul>
+                <li>テキスト入力欄：<code>&lt;input type="text"&gt;</code></li>
+                <li>ボタン：<code>&lt;button&gt;</code></li>
+                <li>入力内容を取り出す：<code>.value</code></li>
+                <li>関数（ファンクション）を作る：<code>function 名前() { }</code></li>
+            </ul>
+        </div>
+        <div class="card">
+            <h2>やってみよう！ 💻</h2>
+            <h3><span class="step-number">1</span>フォームをHTMLに追加しよう</h3>
+            <pre class="html-code">
+&lt;body&gt;
+  &lt;h1&gt;わたしの図鑑&lt;/h1&gt;
+
+  &lt;!-- 追加フォーム --&gt;
+  &lt;div class="add-form"&gt;
+    &lt;h2&gt;🐾 生き物を追加する&lt;/h2&gt;
+    &lt;input id="input-name"  type="text" placeholder="名前"&gt;
+    &lt;input id="input-place" type="text" placeholder="場所"&gt;
+    &lt;input id="input-date"  type="text" placeholder="日付"&gt;
+    &lt;input id="input-memo"  type="text" placeholder="メモ"&gt;
+    &lt;button onclick="addIkimono()"&gt;追加する！&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;div id="zukan-container" class="zukan-container"&gt;&lt;/div&gt;
+&lt;/body&gt;</pre>
+            <h3><span class="step-number">2</span>フォームのCSSを書こう</h3>
+            <pre class="css-code">
+.add-form {
+  background: white;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
+}
+.add-form input {
+  display: block; width: 80%;
+  margin: 8px auto; padding: 8px 12px;
+  border: 1px solid #ccc; border-radius: 5px;
+}
+.add-form button {
+  margin-top: 12px; padding: 10px 24px;
+  background-color: #2e8b57; color: white;
+  border: none; border-radius: 5px; cursor: pointer;
+}</pre>
+            <h3><span class="step-number">3</span>JavaScriptで追加する関数を書こう</h3>
+            <pre class="js-code">
+function addIkimono() {
+  // フォームから入力値を取得する
+  let name  = document.getElementById("input-name").value;
+  let place = document.getElementById("input-place").value;
+  let date  = document.getElementById("input-date").value;
+  let memo  = document.getElementById("input-memo").value;
+
+  // 名前が空っぽだったら警告して止まる
+  if (name === "") {
+    alert("名前を入力してください！");
+    return;
+  }
+
+  // カードを追加する
+  let container = document.getElementById("zukan-container");
+  container.innerHTML += `
+    &lt;div class="card" onclick="alert('${name}だよ！')"&gt;
+      &lt;h2&gt;${name}&lt;/h2&gt;
+      &lt;img src="https://placehold.jp/240x180.png?text=${name}"
+           alt="${name}" width="200"&gt;
+      &lt;p&gt;${memo}&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;📍 場所：${place}&lt;/li&gt;
+        &lt;li&gt;📅 日付：${date}&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  `;
+
+  // フォームをリセット
+  document.getElementById("input-name").value  = "";
+  document.getElementById("input-place").value = "";
+  document.getElementById("input-date").value  = "";
+  document.getElementById("input-memo").value  = "";
+}</pre>
+        </div>
+        <div class="card">
+            <h2>今日のポイント 💡</h2>
+            <div class="point-box">
+                <ul>
+                    <li><code>&lt;input type="text"&gt;</code> → 文字を入力できるテキストボックス</li>
+                    <li><code>&lt;button onclick="関数名()"&gt;</code> → クリックで関数を呼び出すボタン</li>
+                    <li><code>function 名前() { ... }</code> → 「命令のまとまり」が関数。呼ばれた時に実行される</li>
+                    <li><code>要素.value</code> → 入力フォームに書かれた値を取り出す</li>
+                    <li><code>if (名前 === "") { ... }</code> → 「もし〇〇ならば」という条件分岐</li>
+                </ul>
+            </div>
+        </div>
+        <div class="card">
+            <h2>チャレンジ問題 🌟</h2>
+            <p>カードを追加したとき、<code>alert('追加したよ！🎉')</code> というメッセージを出してみよう！</p>
+        </div>
+        <div class="card">
+            <h2>理解度チェック ✅</h2>
+            <div class="check-box">
+                <form id="quizForm">
+                    <div class="quiz-item">
+                        <p class="question">Q1. ユーザーが文字を入力できる欄を作るHTMLタグは？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="incorrect"> &lt;text&gt;</label>
+                            <label><input type="radio" name="q1" value="correct"> &lt;input type="text"&gt;</label>
+                            <label><input type="radio" name="q1" value="incorrect"> &lt;form&gt;</label>
+                        </div>
+                        <div class="feedback" id="feedback-q1"></div>
+                    </div>
+                    <div class="quiz-item">
+                        <p class="question">Q2. JavaScriptで「命令のまとまり」を作るキーワードは？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="incorrect"> let</label>
+                            <label><input type="radio" name="q2" value="correct"> function</label>
+                            <label><input type="radio" name="q2" value="incorrect"> const</label>
+                        </div>
+                        <div class="feedback" id="feedback-q2"></div>
+                    </div>
+                    <div class="quiz-item">
+                        <p class="question">Q3. 入力フォームの中に書かれた値を取り出すのに使うプロパティは？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q3" value="incorrect"> .innerHTML</label>
+                            <label><input type="radio" name="q3" value="correct"> .value</label>
+                            <label><input type="radio" name="q3" value="incorrect"> .text</label>
+                        </div>
+                        <div class="feedback" id="feedback-q3"></div>
+                    </div>
+                    <button type="button" class="check-btn" onclick="checkAnswers()">答え合わせをする！</button>
+                    <div id="total-score"></div>
+                </form>
+            </div>
+        </div>
+        <div class="card">
+            <h2>今日のアウトプット ✅</h2>
+            <ul>
+                <li><input type="checkbox"> フォームとボタンを追加できた</li>
+                <li><input type="checkbox"> ボタンを押して新しいカードを追加できた</li>
+            </ul>
+        </div>
+        <div class="navigation">
+            <a href="lesson10.html" class="nav-btn">← 前のレッスン</a>
+            <a href="index.html" class="nav-btn">目次へ</a>
+            <a href="lesson12.html" class="nav-btn next">次のレッスン →</a>
+        </div>
+    </div>
+    <script>
+        function checkAnswers() {
+            let score = 0; const total = 3;
+            score += checkQuestion('q1', '&lt;input type="text"&gt; でテキスト入力欄を作るよ！');
+            score += checkQuestion('q2', 'function でJavaScriptの関数（処理のまとまり）を作るよ！');
+            score += checkQuestion('q3', '.value で入力フォームの中身を取り出せるよ！');
+            const sd = document.getElementById('total-score');
+            sd.innerHTML = score === total ? `<p class="perfect">すごい！全問正解！🎉</p>` : `<p>${total}問中${score}問正解。もう一度見直してみよう！💪</p>`;
         }
-
-        // 最初のリストを表示する
-        zukanData.forEach(renderCard);
-
-        // フォームから新しい生き物を追加する関数
-        function addIkimono() {
-            let name = document.getElementById("input-name").value;
-            let place = document.getElementById("input-place").value;
-            let date = document.getElementById("input-date").value;
-            let memo = document.getElementById("input-memo").value;
-
-            if (name === "") {
-                alert("名前を入力してください！");
-                return;
-            }
-
-            let newIkimono = {
-                name: name,
-                image: "https://placehold.jp/240x180.png?text=" + encodeURIComponent(name),
-                description: memo,
-                place: place,
-                date: date
-            };
-
-            renderCard(newIkimono);
-
-            document.getElementById("input-name").value = "";
-            document.getElementById("input-place").value = "";
-            document.getElementById("input-date").value = "";
-            document.getElementById("input-memo").value = "";
+        function checkQuestion(name, explanation) {
+            const options = document.getElementsByName(name); const feedback = document.getElementById('feedback-' + name);
+            let isCorrect = false, isSelected = false;
+            for (const o of options) { if (o.checked) { isSelected = true; if (o.value === 'correct') isCorrect = true; } }
+            if (!isSelected) { feedback.innerHTML = '<span class="incorrect">まだ選んでないよ！</span>'; feedback.className = 'feedback show'; return 0; }
+            if (isCorrect) { feedback.innerHTML = '<span class="correct">正解！⭕</span> ' + explanation; feedback.className = 'feedback show correct-bg'; return 1; }
+            else { feedback.innerHTML = '<span class="incorrect">ざんねん...❌</span> 上の説明を読み返してみよう！'; feedback.className = 'feedback show incorrect-bg'; return 0; }
         }
     </script>
 </body>

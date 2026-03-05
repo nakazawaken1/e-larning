@@ -1,211 +1,562 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
 <head>
     <meta charset="UTF-8">
-    <title>わたしのオリジナル図鑑</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第12回：オリジナル図鑑の完成！ - 図鑑Webサービスを作ろう</title>
     <style>
+        :root {
+            --primary: #2e8b57;
+            --primary-light: #52b788;
+            --secondary: #ff6347;
+            --bg: #f0f8ff;
+            --text: #1f2937;
+        }
+
         body {
-            background-color: #f0f8ff;
-            font-family: sans-serif;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #9333ea, #db2777);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 1.8rem;
             margin: 0;
         }
 
-        header {
-            background-color: #2e8b57;
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 2em;
-        }
-
-        .add-form {
-            background-color: white;
-            max-width: 500px;
-            margin: 20px auto;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .add-form h2 {
-            color: #2e8b57;
-        }
-
-        .add-form input {
-            display: block;
-            width: 80%;
-            margin: 8px auto;
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .add-form button {
-            margin-top: 12px;
-            padding: 10px 24px;
-            background-color: #2e8b57;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .add-form button:hover {
-            background-color: #236b43;
-        }
-
-        .zukan-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            padding: 24px;
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
         }
 
         .card {
-            background-color: white;
-            width: 250px;
-            padding: 15px;
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.4rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 25px;
+        }
+
+        .goal-box {
+            background-color: #d1fae5;
+            border-left: 5px solid var(--primary);
+            padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            font-weight: bold;
+            font-size: 1.1rem;
         }
 
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        .point-box {
+            background-color: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            border-radius: 10px;
         }
 
-        .card h2 {
-            color: #ff6347;
-            margin-top: 5px;
+        .check-box {
+            background-color: #e0f2fe;
+            border-left: 5px solid #0284c7;
+            padding: 20px;
+            border-radius: 10px;
         }
 
-        img {
-            border-radius: 8px;
+        code {
+            background-color: #1f2937;
+            color: #fbbf24;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
         }
 
-        ul {
-            list-style: none;
-            padding: 0;
-            color: #666;
-            font-size: 14px;
-            text-align: left;
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: monospace;
+            position: relative;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        pre::before {
+            content: "完成コード";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #9333ea;
+            color: white;
+            padding: 5px 10px;
+            border-bottom-left-radius: 10px;
+            border-top-right-radius: 10px;
+            font-size: 0.8rem;
+            font-family: sans-serif;
+        }
+
+        ul,
+        ol {
+            padding-left: 20px;
         }
 
         li {
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        th {
+            background: #f1f5f9;
+        }
+
+        .quiz-item {
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .question {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+
+        .options label:hover {
+            background-color: #d1fae5;
+            border-color: var(--primary-light);
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .check-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s;
+        }
+
+        .check-btn:hover {
+            background-color: #236b43;
+            transform: translateY(-2px);
+        }
+
+        .feedback {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .correct {
+            color: #059669;
+            font-weight: bold;
+        }
+
+        .incorrect {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .correct-bg {
+            background-color: #ecfdf5;
+            border: 2px solid #10b981;
+        }
+
+        .incorrect-bg {
+            background-color: #fef2f2;
+            border: 2px solid #ef4444;
+        }
+
+        #total-score {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .perfect {
+            color: #ea580c;
+            background-color: #fff7ed;
+            border: 2px dashed #ea580c;
+            padding: 20px;
+            display: inline-block;
+            border-radius: 10px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 20px;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            color: var(--text);
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.next {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .congrats {
+            background: linear-gradient(135deg, #fef9c3, #fde68a);
+            border: 2px solid #f59e0b;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.1rem;
         }
     </style>
 </head>
 
 <body>
-
-    <header>
-        <h1>🌿 わたしのオリジナル図鑑 🐛</h1>
-        <p>見つけた草花や虫を記録しよう！</p>
-    </header>
-
-    <div class="add-form">
-        <h2>🐾 生き物を追加する</h2>
-        <input id="input-name" type="text" placeholder="名前（例：タンポポ）">
-        <input id="input-place" type="text" placeholder="場所（例：公園）">
-        <input id="input-date" type="text" placeholder="日付（例：3月5日）">
-        <input id="input-memo" type="text" placeholder="メモ（例：黄色くてかわいい花）">
-        <button onclick="addIkimono()">追加する！</button>
-    </div>
-
-    <div id="zukan-container" class="zukan-container"></div>
-
-    <script>
-        let zukanData = [
-            {
-                name: "アサガオ",
-                image: "https://placehold.jp/240x180.png?text=アサガオ",
-                description: "夏にきれいに咲く花です。",
-                place: "学校の花壇",
-                date: "7月20日"
-            },
-            {
-                name: "カブトムシ",
-                image: "https://placehold.jp/240x180.png?text=カブトムシ",
-                description: "かっこいいツノがある夏の虫です。",
-                place: "近くの森",
-                date: "8月5日"
-            },
-            {
-                name: "タンポポ",
-                image: "https://placehold.jp/240x180.png?text=タンポポ",
-                description: "春に黄色いかわいい花を咲かせます。",
-                place: "公園",
-                date: "4月10日"
-            }
-        ];
-
-        let container = document.getElementById("zukan-container");
-
-        function renderCard(ikimono) {
-            let cardHTML = `
-        <div class="card" onclick="showDetail('${ikimono.name}', '${ikimono.description}', '${ikimono.place}', '${ikimono.date}')">
-          <h2>${ikimono.name}</h2>
-          <img src="${ikimono.image}" alt="${ikimono.name}の写真" width="200">
-          <p>${ikimono.description}</p>
-          <ul>
-            <li>📍 場所：${ikimono.place}</li>
-            <li>📅 日付：${ikimono.date}</li>
-          </ul>
+    <div class="hero">
+        <div class="container">
+            <h1>第12回：オリジナル図鑑の完成！🎉</h1>
         </div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2>今日のゴール 🎯</h2>
+            <div class="goal-box">これまで学んだすべてを使って、フォームで生き物を追加できる完成版の図鑑を作る！</div>
+        </div>
+        <div class="card">
+            <h2>学ぶこと 📚</h2>
+            <ul>
+                <li>第1回〜第11回の総復習</li>
+                <li>配列に追加する <code>.push()</code></li>
+                <li>関数を使ってコードを整理する</li>
+                <li>自分流のカスタマイズの方法</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h2>完成版のコード 💻</h2>
+            <p>以下が図鑑Webサービスのすべての機能が入った完成版です。コピーして <code>index.html</code> に使おう！</p>
+            <pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="ja"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;わたしのオリジナル図鑑&lt;/title&gt;
+  &lt;style&gt;
+    /* 省略 - 前回までのCSSをそのまま使おう */
+    body { background-color: #f0f8ff; font-family: sans-serif; margin: 0; }
+    header { background-color: #2e8b57; color: white; text-align: center; padding: 20px; }
+    .zukan-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; padding: 24px; }
+    .card { background: white; width: 250px; padding: 15px; border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: center; cursor: pointer;
+            transition: transform 0.2s; }
+    .card:hover { transform: translateY(-4px); }
+    .card h2 { color: #ff6347; }
+    img { border-radius: 8px; }
+    ul { list-style: none; padding: 0; color: #666; font-size: 14px; text-align: left; }
+    .add-form { background: white; max-width: 500px; margin: 20px auto; padding: 20px;
+                border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: center; }
+    .add-form input { display: block; width: 80%; margin: 8px auto; padding: 8px 12px;
+                      border: 1px solid #ccc; border-radius: 5px; }
+    .add-form button { margin-top: 12px; padding: 10px 24px; background: #2e8b57;
+                       color: white; border: none; border-radius: 5px; cursor: pointer; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;🌿 わたしのオリジナル図鑑 🐛&lt;/h1&gt;
+  &lt;/header&gt;
+
+  &lt;div class="add-form"&gt;
+    &lt;h2&gt;🐾 生き物を追加する&lt;/h2&gt;
+    &lt;input id="input-name"  type="text" placeholder="名前"&gt;
+    &lt;input id="input-place" type="text" placeholder="場所"&gt;
+    &lt;input id="input-date"  type="text" placeholder="日付"&gt;
+    &lt;input id="input-memo"  type="text" placeholder="メモ"&gt;
+    &lt;button onclick="addIkimono()"&gt;追加する！&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;div id="zukan-container" class="zukan-container"&gt;&lt;/div&gt;
+
+  &lt;script&gt;
+    let zukanData = [
+      { name:"アサガオ", description:"夏の花",   place:"学校の花壇", date:"7月20日" },
+      { name:"カブトムシ",description:"夏の虫",   place:"近くの森",   date:"8月5日"  },
+      { name:"タンポポ",  description:"春の花",   place:"公園",       date:"4月10日" }
+    ];
+
+    let container = document.getElementById("zukan-container");
+
+    function renderCard(ikimono) {
+      container.innerHTML += `
+        &lt;div class="card" onclick="alert('【${ikimono.name}】\n${ikimono.description}\n📍${ikimono.place} 📅${ikimono.date}')"&gt;
+          &lt;h2&gt;${ikimono.name}&lt;/h2&gt;
+          &lt;img src="https://placehold.jp/240x180.png?text=${encodeURIComponent(ikimono.name)}"
+               alt="${ikimono.name}" width="200"&gt;
+          &lt;p&gt;${ikimono.description}&lt;/p&gt;
+          &lt;ul&gt;
+            &lt;li&gt;📍 場所：${ikimono.place}&lt;/li&gt;
+            &lt;li&gt;📅 日付：${ikimono.date}&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
       `;
-            container.innerHTML += cardHTML;
+    }
+
+    zukanData.forEach(renderCard);
+
+    function addIkimono() {
+      let name  = document.getElementById("input-name").value;
+      let place = document.getElementById("input-place").value;
+      let date  = document.getElementById("input-date").value;
+      let memo  = document.getElementById("input-memo").value;
+      if (name === "") { alert("名前を入力してください！"); return; }
+      let newData = { name, description: memo||"（メモなし）", place: place||"（場所なし）", date: date||"（日付なし）" };
+      zukanData.push(newData);
+      renderCard(newData);
+      document.getElementById("input-name").value = "";
+      document.getElementById("input-place").value = "";
+      document.getElementById("input-date").value = "";
+      document.getElementById("input-memo").value = "";
+      alert(`「${name}」を追加したよ！🎉`);
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+        </div>
+        <div class="card">
+            <h2>全12回で学んだこと 📚</h2>
+            <table>
+                <tr>
+                    <th>回</th>
+                    <th>テーマ</th>
+                    <th>学んだ主なこと</th>
+                </tr>
+                <tr>
+                    <td>第1回</td>
+                    <td>HTMLの基本</td>
+                    <td>&lt;html&gt;, &lt;head&gt;, &lt;body&gt;, &lt;h1&gt;</td>
+                </tr>
+                <tr>
+                    <td>第2回</td>
+                    <td>テキスト表現</td>
+                    <td>&lt;p&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;h2&gt;</td>
+                </tr>
+                <tr>
+                    <td>第3回</td>
+                    <td>CSSで色付け</td>
+                    <td>color, background-color, &lt;style&gt;</td>
+                </tr>
+                <tr>
+                    <td>第4回</td>
+                    <td>画像の追加</td>
+                    <td>&lt;img&gt;, src, alt, width</td>
+                </tr>
+                <tr>
+                    <td>第5回</td>
+                    <td>タイルレイアウト</td>
+                    <td>&lt;div&gt;, class, Flexbox</td>
+                </tr>
+                <tr>
+                    <td>第6回</td>
+                    <td>デザインの仕上げ</td>
+                    <td>border-radius, box-shadow</td>
+                </tr>
+                <tr>
+                    <td>第7回</td>
+                    <td>JSの基本</td>
+                    <td>&lt;script&gt;, console.log(), let</td>
+                </tr>
+                <tr>
+                    <td>第8回</td>
+                    <td>クリックイベント</td>
+                    <td>onclick, alert()</td>
+                </tr>
+                <tr>
+                    <td>第9回</td>
+                    <td>データ管理</td>
+                    <td>オブジェクト { }, 配列 [ ]</td>
+                </tr>
+                <tr>
+                    <td>第10回</td>
+                    <td>DOM操作</td>
+                    <td>getElementById, forEach, innerHTML</td>
+                </tr>
+                <tr>
+                    <td>第11回</td>
+                    <td>フォーム入力</td>
+                    <td>&lt;input&gt;, function, .value</td>
+                </tr>
+                <tr>
+                    <td>第12回</td>
+                    <td>総仕上げ</td>
+                    <td>全機能の統合・カスタマイズ</td>
+                </tr>
+            </table>
+        </div>
+        <div class="card">
+            <h2>カスタマイズのアイデア 🌟</h2>
+            <ul>
+                <li>タイトルや配色を自分の好みに変えてみよう！</li>
+                <li>自分で撮影した草花・虫の写真を入れてみよう！（<code>img</code> の <code>src</code> を写真のパスに）</li>
+                <li>図鑑のジャンルを変えてみよう！（おかし図鑑・雲図鑑・電車図鑑…なんでも OK！）</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h2>理解度チェック ✅</h2>
+            <div class="check-box">
+                <form id="quizForm">
+                    <div class="quiz-item">
+                        <p class="question">Q1. 配列の末尾に新しいデータを追加するメソッドは？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="incorrect"> .add()</label>
+                            <label><input type="radio" name="q1" value="correct"> .push()</label>
+                            <label><input type="radio" name="q1" value="incorrect"> .append()</label>
+                        </div>
+                        <div class="feedback" id="feedback-q1"></div>
+                    </div>
+                    <div class="quiz-item">
+                        <p class="question">Q2. Webページの「骨格（内容）」を担当する言語は？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="incorrect"> CSS</label>
+                            <label><input type="radio" name="q2" value="incorrect"> JavaScript</label>
+                            <label><input type="radio" name="q2" value="correct"> HTML</label>
+                        </div>
+                        <div class="feedback" id="feedback-q2"></div>
+                    </div>
+                    <div class="quiz-item">
+                        <p class="question">Q3. Webページの「デザイン・見た目」を担当する言語は？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q3" value="correct"> CSS</label>
+                            <label><input type="radio" name="q3" value="incorrect"> HTML</label>
+                            <label><input type="radio" name="q3" value="incorrect"> JavaScript</label>
+                        </div>
+                        <div class="feedback" id="feedback-q3"></div>
+                    </div>
+                    <button type="button" class="check-btn" onclick="checkAnswers()">最終チェック！</button>
+                    <div id="total-score"></div>
+                </form>
+            </div>
+        </div>
+        <div class="card">
+            <div class="congrats">
+                🎊 全12回おつかれさまでした！<br>HTML・CSS・JavaScriptを使って、本格的な図鑑Webサービスを完成させました。<br><strong>おめでとう！！</strong>
+            </div>
+        </div>
+        <div class="navigation">
+            <a href="lesson11.html" class="nav-btn">← 前のレッスン</a>
+            <a href="index.html" class="nav-btn">目次へ</a>
+            <span class="nav-btn next" style="visibility:hidden">次のレッスン →</span>
+        </div>
+    </div>
+    <script>
+        function checkAnswers() {
+            let score = 0; const total = 3;
+            score += checkQuestion('q1', '.push() で配列の末尾にデータを追加できるよ！');
+            score += checkQuestion('q2', 'HTMLがWebページの内容（骨格）を担当するよ！');
+            score += checkQuestion('q3', 'CSSがデザイン・見た目を担当するよ！');
+            const sd = document.getElementById('total-score');
+            if (score === total) { sd.innerHTML = `<p class="perfect">🎉 全問正解！全12回完璧に学んだね！本当におめでとう！</p>`; }
+            else { sd.innerHTML = `<p>${total}問中${score}問正解。もう一度前のレッスンから確認してみよう！💪</p>`; }
         }
-
-        function showDetail(name, desc, place, date) {
-            alert(`【${name}】\n\n📝 ${desc}\n📍 場所：${place}\n📅 日付：${date}`);
-        }
-
-        zukanData.forEach(renderCard);
-
-        function addIkimono() {
-            let name = document.getElementById("input-name").value;
-            let place = document.getElementById("input-place").value;
-            let date = document.getElementById("input-date").value;
-            let memo = document.getElementById("input-memo").value;
-
-            if (name === "") {
-                alert("名前を入力してください！");
-                return;
-            }
-
-            let newIkimono = {
-                name: name,
-                image: "https://placehold.jp/240x180.png?text=" + encodeURIComponent(name),
-                description: memo || "（メモなし）",
-                place: place || "（場所なし）",
-                date: date || "（日付なし）"
-            };
-
-            zukanData.push(newIkimono);
-            renderCard(newIkimono);
-
-            document.getElementById("input-name").value = "";
-            document.getElementById("input-place").value = "";
-            document.getElementById("input-date").value = "";
-            document.getElementById("input-memo").value = "";
-
-            alert(`「${name}」を図鑑に追加したよ！🎉`);
+        function checkQuestion(name, explanation) {
+            const options = document.getElementsByName(name); const feedback = document.getElementById('feedback-' + name);
+            let isCorrect = false, isSelected = false;
+            for (const o of options) { if (o.checked) { isSelected = true; if (o.value === 'correct') isCorrect = true; } }
+            if (!isSelected) { feedback.innerHTML = '<span class="incorrect">まだ選んでないよ！</span>'; feedback.className = 'feedback show'; return 0; }
+            if (isCorrect) { feedback.innerHTML = '<span class="correct">正解！⭕</span> ' + explanation; feedback.className = 'feedback show correct-bg'; return 1; }
+            else { feedback.innerHTML = '<span class="incorrect">ざんねん...❌</span> 上の説明を読み返してみよう！'; feedback.className = 'feedback show incorrect-bg'; return 0; }
         }
     </script>
-
 </body>
 
 </html>

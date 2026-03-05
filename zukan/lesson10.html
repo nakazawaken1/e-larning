@@ -1,107 +1,442 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
 <head>
     <meta charset="UTF-8">
-    <title>わたしの図鑑</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第10回：データから図鑑のタイルを作ろう！ - 図鑑Webサービスを作ろう</title>
     <style>
+        :root {
+            --primary: #2e8b57;
+            --primary-light: #52b788;
+            --secondary: #ff6347;
+            --bg: #f0f8ff;
+            --text: #1f2937;
+        }
+
         body {
-            background-color: #f0f8ff;
-            font-family: sans-serif;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
         }
 
-        h1 {
-            color: #2e8b57;
+        .hero {
+            background: linear-gradient(135deg, #b45309, #d97706);
+            color: white;
+            padding: 40px 20px;
             text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            margin-bottom: 40px;
         }
 
-        h2 {
-            color: #ff6347;
-            margin-top: 5px;
+        .hero h1 {
+            font-size: 1.8rem;
+            margin: 0;
         }
 
-        .zukan-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            padding: 20px;
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
         }
 
         .card {
-            background-color: white;
-            width: 250px;
-            padding: 15px;
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.4rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 25px;
+        }
+
+        .goal-box {
+            background-color: #d1fae5;
+            border-left: 5px solid var(--primary);
+            padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .point-box {
+            background-color: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .check-box {
+            background-color: #e0f2fe;
+            border-left: 5px solid #0284c7;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        code {
+            background-color: #1f2937;
+            color: #fbbf24;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: monospace;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        pre::before {
+            content: "JavaScript";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #b45309;
+            color: white;
+            padding: 5px 10px;
+            border-bottom-left-radius: 10px;
+            border-top-right-radius: 10px;
+            font-size: 0.8rem;
+            font-family: sans-serif;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
             text-align: center;
-            cursor: pointer;
+            line-height: 28px;
+            margin-right: 8px;
+            font-weight: bold;
         }
 
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-            transition: all 0.2s ease;
-        }
-
-        img {
-            border-radius: 8px;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            color: #666;
-            font-size: 14px;
-            text-align: left;
+        ul,
+        ol {
+            padding-left: 20px;
         }
 
         li {
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .quiz-item {
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .question {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+
+        .options label:hover {
+            background-color: #d1fae5;
+            border-color: var(--primary-light);
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .check-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s;
+        }
+
+        .check-btn:hover {
+            background-color: #236b43;
+            transform: translateY(-2px);
+        }
+
+        .feedback {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .correct {
+            color: #059669;
+            font-weight: bold;
+        }
+
+        .incorrect {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .correct-bg {
+            background-color: #ecfdf5;
+            border: 2px solid #10b981;
+        }
+
+        .incorrect-bg {
+            background-color: #fef2f2;
+            border: 2px solid #ef4444;
+        }
+
+        #total-score {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .perfect {
+            color: #ea580c;
+            background-color: #fff7ed;
+            border: 2px dashed #ea580c;
+            padding: 20px;
+            display: inline-block;
+            border-radius: 10px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 20px;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            color: var(--text);
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.next {
+            color: var(--primary);
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
-    <h1>わたしの図鑑</h1>
-
-    <div id="zukan-container" class="zukan-container">
-    </div>
-
-    <script>
-        let zukanData = [
-            {
-                name: "アサガオ",
-                image: "https://placehold.jp/240x180.png?text=アサガオ",
-                description: "夏にきれいに咲く花です。",
-                place: "学校の花壇",
-                date: "7月20日"
-            },
-            {
-                name: "カブトムシ",
-                image: "https://placehold.jp/240x180.png?text=カブトムシ",
-                description: "かっこいいツノがある夏の虫です。",
-                place: "近くの森",
-                date: "8月5日"
-            }
-        ];
-
-        let container = document.getElementById("zukan-container");
-
-        zukanData.forEach(function (ikimono) {
-            let cardHTML = `
-        <div class="card" onclick="alert('${ikimono.name}だよ！')">
-          <h2>${ikimono.name}</h2>
-          <img src="${ikimono.image}" alt="${ikimono.name}の写真" width="200">
-          <p>${ikimono.description}</p>
-          <ul>
-            <li>📍 場所：${ikimono.place}</li>
-            <li>📅 日付：${ikimono.date}</li>
-          </ul>
+    <div class="hero">
+        <div class="container">
+            <h1>第10回：データから<br>図鑑のタイルを作ろう！</h1>
         </div>
-      `;
-            container.innerHTML += cardHTML;
-        });
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2>今日のゴール 🎯</h2>
+            <div class="goal-box">JavaScriptのデータを使って、タイルカードを自動生成する！HTMLに手書きしなくてよくなる！</div>
+        </div>
+        <div class="card">
+            <h2>学ぶこと 📚</h2>
+            <ul>
+                <li>idでHTML要素を取得する：<code>document.getElementById()</code></li>
+                <li>配列を繰り返し処理する：<code>forEach()</code></li>
+                <li>JavaScriptでHTMLを作って追加する：<code>innerHTML</code></li>
+                <li>テンプレートリテラル：<code>`文字列${変数}`</code></li>
+            </ul>
+        </div>
+        <div class="card">
+            <h2>やってみよう！ 💻</h2>
+            <h3><span class="step-number">1</span>HTMLのカードを消して入れ物だけ残す</h3>
+            <p>手書きの <code>&lt;div class="card"&gt;</code> をすべて消し、空の入れ物だけにします：</p>
+            <pre>
+&lt;body&gt;
+  &lt;h1&gt;わたしの図鑑&lt;/h1&gt;
+
+  &lt;!-- この中はJavaScriptが自動で作る！ --&gt;
+  &lt;div id="zukan-container" class="zukan-container"&gt;
+  &lt;/div&gt;
+&lt;/body&gt;</pre>
+            <h3><span class="step-number">2</span>JavaScriptでカードを自動生成する</h3>
+            <pre>
+let zukanData = [
+  { name: "アサガオ",
+    image: "https://placehold.jp/240x180.png?text=アサガオ",
+    description: "夏にきれいに咲く花です。",
+    place: "学校の花壇", date: "7月20日" },
+  { name: "カブトムシ",
+    image: "https://placehold.jp/240x180.png?text=カブトムシ",
+    description: "かっこいいツノがある夏の虫です。",
+    place: "近くの森", date: "8月5日" }
+];
+
+// idでHTML要素を取得
+let container = document.getElementById("zukan-container");
+
+// 配列を1件ずつ処理して card を作る
+zukanData.forEach(function(ikimono) {
+  container.innerHTML += `
+    &lt;div class="card" onclick="alert('${ikimono.name}だよ！')"&gt;
+      &lt;h2&gt;${ikimono.name}&lt;/h2&gt;
+      &lt;img src="${ikimono.image}" alt="${ikimono.name}" width="200"&gt;
+      &lt;p&gt;${ikimono.description}&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;📍 場所：${ikimono.place}&lt;/li&gt;
+        &lt;li&gt;📅 日付：${ikimono.date}&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  `;
+});</pre>
+        </div>
+        <div class="card">
+            <h2>今日のポイント 💡</h2>
+            <div class="point-box">
+                <ul>
+                    <li><code>document.getElementById("名前")</code> → <code>id="名前"</code> がついた要素を取得する</li>
+                    <li><code>配列.forEach(function(item){ ... })</code> → 配列の中のデータを1つずつ取り出して処理する</li>
+                    <li>バッククォート <code>` `</code>（テンプレートリテラル）で <code>${変数}</code> を埋め込める</li>
+                    <li><code>innerHTML</code> → HTML要素の中身を読み書きできる</li>
+                </ul>
+            </div>
+        </div>
+        <div class="card">
+            <h2>チャレンジ問題 🌟</h2>
+            <p><code>zukanData</code> の配列に3つ目の生き物を追加してみよう！HTMLは変えなくても、タイルが自動で増えるよ！</p>
+        </div>
+        <div class="card">
+            <h2>理解度チェック ✅</h2>
+            <div class="check-box">
+                <form id="quizForm">
+                    <div class="quiz-item">
+                        <p class="question">Q1. <code>id="zukan-container"</code> の要素をJavaScriptで取得するコードは？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="incorrect">
+                                document.querySelector("zukan-container")</label>
+                            <label><input type="radio" name="q1" value="correct">
+                                document.getElementById("zukan-container")</label>
+                            <label><input type="radio" name="q1" value="incorrect">
+                                document.getElement("zukan-container")</label>
+                        </div>
+                        <div class="feedback" id="feedback-q1"></div>
+                    </div>
+                    <div class="quiz-item">
+                        <p class="question">Q2. 配列のデータを1件ずつ取り出して処理するメソッドは？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="incorrect"> for()</label>
+                            <label><input type="radio" name="q2" value="correct"> forEach()</label>
+                            <label><input type="radio" name="q2" value="incorrect"> map()</label>
+                        </div>
+                        <div class="feedback" id="feedback-q2"></div>
+                    </div>
+                    <div class="quiz-item">
+                        <p class="question">Q3. テンプレートリテラルで変数を文字列に埋め込む書き方は？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q3" value="incorrect"> "文字列" + {変数}</label>
+                            <label><input type="radio" name="q3" value="correct"> `文字列${変数}`</label>
+                            <label><input type="radio" name="q3" value="incorrect"> "文字列%(変数)"</label>
+                        </div>
+                        <div class="feedback" id="feedback-q3"></div>
+                    </div>
+                    <button type="button" class="check-btn" onclick="checkAnswers()">答え合わせをする！</button>
+                    <div id="total-score"></div>
+                </form>
+            </div>
+        </div>
+        <div class="card">
+            <h2>今日のアウトプット ✅</h2>
+            <ul>
+                <li><input type="checkbox"> HTMLのカードを消して空の div だけにした</li>
+                <li><input type="checkbox"> JavaScriptで自動的にカードが表示された</li>
+            </ul>
+        </div>
+        <div class="navigation">
+            <a href="lesson09.html" class="nav-btn">← 前のレッスン</a>
+            <a href="index.html" class="nav-btn">目次へ</a>
+            <a href="lesson11.html" class="nav-btn next">次のレッスン →</a>
+        </div>
+    </div>
+    <script>
+        function checkAnswers() {
+            let score = 0; const total = 3;
+            score += checkQuestion('q1', 'getElementById() でidを持つ要素を取得するよ！');
+            score += checkQuestion('q2', 'forEach() が配列を1件ずつ処理する繰り返しのメソッドだよ！');
+            score += checkQuestion('q3', 'バッククォート（`）で囲んで ${変数} で埋め込めるのがテンプレートリテラルだよ！');
+            const sd = document.getElementById('total-score');
+            sd.innerHTML = score === total ? `<p class="perfect">すごい！全問正解！🎉</p>` : `<p>${total}問中${score}問正解。もう一度見直してみよう！💪</p>`;
+        }
+        function checkQuestion(name, explanation) {
+            const options = document.getElementsByName(name); const feedback = document.getElementById('feedback-' + name);
+            let isCorrect = false, isSelected = false;
+            for (const o of options) { if (o.checked) { isSelected = true; if (o.value === 'correct') isCorrect = true; } }
+            if (!isSelected) { feedback.innerHTML = '<span class="incorrect">まだ選んでないよ！</span>'; feedback.className = 'feedback show'; return 0; }
+            if (isCorrect) { feedback.innerHTML = '<span class="correct">正解！⭕</span> ' + explanation; feedback.className = 'feedback show correct-bg'; return 1; }
+            else { feedback.innerHTML = '<span class="incorrect">ざんねん...❌</span> 上の説明を読み返してみよう！'; feedback.className = 'feedback show incorrect-bg'; return 0; }
+        }
     </script>
 </body>
 

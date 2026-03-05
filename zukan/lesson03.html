@@ -1,40 +1,439 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
 <head>
     <meta charset="UTF-8">
-    <title>わたしの図鑑</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第3回：図鑑に色をつけよう！ - 図鑑Webサービスを作ろう</title>
     <style>
-        body {
-            background-color: #f0f8ff;
+        :root {
+            --primary: #2e8b57;
+            --primary-light: #52b788;
+            --secondary: #ff6347;
+            --bg: #f0f8ff;
+            --text: #1f2937;
+            --card-bg: #ffffff;
         }
 
-        h1 {
-            color: #2e8b57;
+        body {
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary), #1a5c39);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
-            color: #ff6347;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.4rem;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-top: 25px;
+        }
+
+        .goal-box {
+            background-color: #d1fae5;
+            border-left: 5px solid var(--primary);
+            padding: 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .point-box {
+            background-color: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .check-box {
+            background-color: #e0f2fe;
+            border-left: 5px solid #0284c7;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        code {
+            background-color: #1f2937;
+            color: #fbbf24;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: monospace;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        pre::before {
+            content: "HTML/CSS";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            padding: 5px 10px;
+            border-bottom-left-radius: 10px;
+            border-top-right-radius: 10px;
+            font-size: 0.8rem;
+            font-family: sans-serif;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            margin-right: 8px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        ul,
+        ol {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .quiz-item {
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .question {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+
+        .options label:hover {
+            background-color: #d1fae5;
+            border-color: var(--primary-light);
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .check-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s;
+        }
+
+        .check-btn:hover {
+            background-color: #236b43;
+            transform: translateY(-2px);
+        }
+
+        .feedback {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .correct {
+            color: #059669;
+            font-weight: bold;
+        }
+
+        .incorrect {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .correct-bg {
+            background-color: #ecfdf5;
+            border: 2px solid #10b981;
+        }
+
+        .incorrect-bg {
+            background-color: #fef2f2;
+            border: 2px solid #ef4444;
+        }
+
+        #total-score {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .perfect {
+            color: #ea580c;
+            background-color: #fff7ed;
+            border: 2px dashed #ea580c;
+            padding: 20px;
+            display: inline-block;
+            border-radius: 10px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 20px;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            color: var(--text);
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.next {
+            color: var(--primary);
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
-    <h1>わたしの図鑑</h1>
+    <div class="hero">
+        <div class="container">
+            <h1>第3回：図鑑に色をつけよう！</h1>
+        </div>
+    </div>
+    <div class="container">
 
-    <h2>アサガオ</h2>
-    <p>夏にきれいに咲く花です。</p>
-    <ul>
-        <li>見つけた場所：学校の花壇</li>
-        <li>見つけた日：7月20日</li>
-    </ul>
+        <div class="card">
+            <h2>今日のゴール 🎯</h2>
+            <div class="goal-box">文字に色をつけたり、背景を好きな色にして、図鑑をカラフルにする！</div>
+        </div>
 
-    <h2>カブトムシ</h2>
-    <p>かっこいいツノがある夏の虫です。</p>
-    <ul>
-        <li>見つけた場所：近くの森</li>
-        <li>見つけた日：8月5日</li>
-    </ul>
+        <div class="card">
+            <h2>学ぶこと 📚</h2>
+            <ul>
+                <li>CSS（スタイルシート）とは何か</li>
+                <li>文字の色を変える：<code>color</code></li>
+                <li>背景の色を変える：<code>background-color</code></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>やってみよう！ 💻</h2>
+            <h3><span class="step-number">1</span>&lt;style&gt; タグを追加しよう</h3>
+            <p>HTMLの <code>&lt;head&gt;</code> の中に <code>&lt;style&gt;</code> タグを追加します。</p>
+            <pre>
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;わたしの図鑑&lt;/title&gt;
+  &lt;style&gt;
+    /* ここにCSSを書きます */
+  &lt;/style&gt;
+&lt;/head&gt;</pre>
+
+            <h3><span class="step-number">2</span>色をつけてみよう</h3>
+            <p><code>&lt;style&gt;</code> の中に書いてみよう：</p>
+            <pre>
+  &lt;style&gt;
+    body {
+      background-color: #f0f8ff; /* うすい水色の背景 */
+    }
+    h1 {
+      color: #2e8b57; /* 濃い緑色の文字 */
+    }
+    h2 {
+      color: #ff6347; /* トマトみたいな赤色の文字 */
+    }
+  &lt;/style&gt;</pre>
+
+            <h3><span class="step-number">3</span>ブラウザで確認しよう</h3>
+            <p>ブラウザを更新して、図鑑がカラフルになったか確認しよう！</p>
+        </div>
+
+        <div class="card">
+            <h2>今日のポイント 💡</h2>
+            <div class="point-box">
+                <ul>
+                    <li><strong>CSS（シーエスエス）</strong>はWebページのデザインをするための言葉です</li>
+                    <li><code>h1 { color: red; }</code> は「&lt;h1&gt;の色を赤にする」という意味</li>
+                    <li><code>color</code> → 文字の色、<code>background-color</code> → 背景の色</li>
+                    <li><code>#f0f8ff</code> のような書き方（カラーコード）でたくさんの色を作れる</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>チャレンジ問題 🌟</h2>
+            <p>自分の好きな色を探して、<code>h1</code> や <code>body</code> の色を変えてみよう！<br>「HTML カラーコード」でインターネット検索すると好きな色のコードが見つかるよ！
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>理解度チェック ✅</h2>
+            <div class="check-box">
+                <form id="quizForm">
+                    <div class="quiz-item">
+                        <p class="question">Q1. Webページのデザインを指定するために使う言語は？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="incorrect"> HTML</label>
+                            <label><input type="radio" name="q1" value="correct"> CSS</label>
+                            <label><input type="radio" name="q1" value="incorrect"> JavaScript</label>
+                        </div>
+                        <div class="feedback" id="feedback-q1"></div>
+                    </div>
+                    <div class="quiz-item">
+                        <p class="question">Q2. 文字の色を変えるときに使うCSSのプロパティは？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="correct"> color</label>
+                            <label><input type="radio" name="q2" value="incorrect"> background-color</label>
+                            <label><input type="radio" name="q2" value="incorrect"> font-size</label>
+                        </div>
+                        <div class="feedback" id="feedback-q2"></div>
+                    </div>
+                    <div class="quiz-item">
+                        <p class="question">Q3. 背景の色を変えるときに使うCSSのプロパティは？</p>
+                        <div class="options">
+                            <label><input type="radio" name="q3" value="incorrect"> color</label>
+                            <label><input type="radio" name="q3" value="correct"> background-color</label>
+                            <label><input type="radio" name="q3" value="incorrect"> border</label>
+                        </div>
+                        <div class="feedback" id="feedback-q3"></div>
+                    </div>
+                    <button type="button" class="check-btn" onclick="checkAnswers()">答え合わせをする！</button>
+                    <div id="total-score"></div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>今日のアウトプット ✅</h2>
+            <ul>
+                <li><input type="checkbox"> &lt;style&gt; タグを追加した</li>
+                <li><input type="checkbox"> 好きな色をつけることができた</li>
+            </ul>
+        </div>
+
+        <div class="navigation">
+            <a href="lesson02.html" class="nav-btn">← 前のレッスン</a>
+            <a href="index.html" class="nav-btn top">目次へ</a>
+            <a href="lesson04.html" class="nav-btn next">次のレッスン →</a>
+        </div>
+    </div>
+    <script>
+        function checkAnswers() {
+            let score = 0; const total = 3;
+            score += checkQuestion('q1', 'CSS（Cascading Style Sheets）がデザインを担当するよ！');
+            score += checkQuestion('q2', 'color が文字（テキスト）の色を変えるプロパティだよ！');
+            score += checkQuestion('q3', 'background-color が背景の色を変えるプロパティだよ！');
+            const scoreDiv = document.getElementById('total-score');
+            if (score === total) { scoreDiv.innerHTML = `<p class="perfect">すごい！${total}問中${score}問正解！🎉</p>`; }
+            else { scoreDiv.innerHTML = `<p>${total}問中${score}問正解。もう一度見直してみよう！💪</p>`; }
+        }
+        function checkQuestion(name, explanation) {
+            const options = document.getElementsByName(name); const feedback = document.getElementById('feedback-' + name);
+            let isCorrect = false, isSelected = false;
+            for (const o of options) { if (o.checked) { isSelected = true; if (o.value === 'correct') isCorrect = true; } }
+            if (!isSelected) { feedback.innerHTML = '<span class="incorrect">まだ選んでないよ！</span>'; feedback.className = 'feedback show'; return 0; }
+            if (isCorrect) { feedback.innerHTML = '<span class="correct">正解！⭕</span> ' + explanation; feedback.className = 'feedback show correct-bg'; return 1; }
+            else { feedback.innerHTML = '<span class="incorrect">ざんねん...❌</span> 上の説明を読み返してみよう！'; feedback.className = 'feedback show incorrect-bg'; return 0; }
+        }
+    </script>
 </body>
 
 </html>

@@ -1,262 +1,328 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
 <head>
     <meta charset="UTF-8">
-    <title>図鑑Webサービス教材 - 全12回</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>図鑑Webサービスを作ろう - プログラミング入門コース</title>
     <style>
+        :root {
+            --primary: #2e8b57;
+            --primary-light: #52b788;
+            --secondary: #ff6347;
+            --bg: #f0f8ff;
+            --text: #1e293b;
+        }
+
         * {
             box-sizing: border-box;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
             margin: 0;
             padding: 0;
         }
 
-        body {
-            background-color: #f0f8ff;
-            font-family: sans-serif;
-        }
-
-        header {
-            background-color: #2e8b57;
+        .hero {
+            background: linear-gradient(135deg, var(--primary), #1a5c39);
             color: white;
+            padding: 80px 20px;
             text-align: center;
-            padding: 32px 20px;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 25px -5px rgba(46, 139, 87, 0.4);
         }
 
-        header h1 {
-            font-size: 2em;
-            margin-bottom: 6px;
+        .hero h1 {
+            font-size: 2.2rem;
+            margin: 0 0 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        header p {
-            font-size: 1em;
+        .hero p {
+            font-size: 1.1rem;
             opacity: 0.9;
-        }
-
-        .lesson-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            padding: 32px 20px;
-            max-width: 1000px;
+            max-width: 600px;
             margin: 0 auto;
         }
 
-        .lesson-card {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 280px;
-            padding: 20px;
+        .start-btn {
+            display: inline-block;
+            background: white;
+            color: var(--primary);
+            padding: 14px 36px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
             text-decoration: none;
-            color: inherit;
-            transition: all 0.2s ease;
+            margin-top: 28px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.6rem;
+            color: var(--text);
+            margin-bottom: 36px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
             display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--secondary);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        .lesson-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: var(--text);
+            border: 1px solid #d1fae5;
+            display: flex;
+            flex-direction: column;
         }
 
         .lesson-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.12);
+            border-color: var(--primary-light);
         }
 
-        .lesson-number {
-            font-size: 0.8em;
+        .card-header {
+            background: #f0fdf4;
+            padding: 14px 20px;
             font-weight: bold;
-            color: white;
-            background-color: #2e8b57;
-            border-radius: 20px;
-            padding: 2px 12px;
-            display: inline-block;
-            margin-bottom: 8px;
+            color: var(--primary);
+            font-size: 0.88rem;
+            letter-spacing: 0.05em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .lesson-card h2 {
-            font-size: 1.1em;
-            color: #333;
-            margin-bottom: 6px;
+        .card-body {
+            padding: 22px;
+            flex-grow: 1;
         }
 
-        .lesson-card p {
-            font-size: 0.85em;
-            color: #666;
-            line-height: 1.5;
-            margin-bottom: 12px;
+        .card-title {
+            font-size: 1.25rem;
+            margin: 0 0 8px;
+            font-weight: bold;
         }
 
-        .lesson-links {
+        .card-desc {
+            font-size: 0.92rem;
+            color: #64748b;
+            margin: 0 0 14px;
+        }
+
+        .tag-container {
             display: flex;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
-        .btn {
-            flex: 1;
-            text-align: center;
-            padding: 6px 0;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 0.8em;
+        .tag {
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 20px;
             font-weight: bold;
         }
 
-        .btn-md {
-            background-color: #e8f5e9;
-            color: #2e8b57;
-            border: 1px solid #2e8b57;
+        .tag.html {
+            background: #fee2e2;
+            color: #dc2626;
         }
 
-        .btn-html {
-            background-color: #fff3e0;
-            color: #e67e22;
-            border: 1px solid #e67e22;
+        .tag.css {
+            background: #dbeafe;
+            color: #2563eb;
         }
 
-        .btn:hover {
-            opacity: 0.8;
+        .tag.js {
+            background: #fef3c7;
+            color: #d97706;
         }
 
-        footer {
-            text-align: center;
-            padding: 24px;
-            color: #999;
-            font-size: 0.85em;
+        .tag.app {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+
+            .container {
+                padding: 0 12px 40px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <header>
-        <h1>🌿 図鑑Webサービスを作ろう！ 🐛</h1>
-        <p>草花・虫の写真を登録してタイル表示できる図鑑を全12回で作るコース</p>
-    </header>
 
-    <div class="lesson-grid">
-
-        <a class="lesson-card" href="#">
-            <span class="lesson-number">第1回</span>
-            <h2>図鑑のベースを作ろう！</h2>
-            <p>HTMLファイルを作って、図鑑のタイトルを表示しよう。Webページの仕組みを学ぶ第一歩！</p>
-            <div class="lesson-links">
-                <a class="btn btn-md" href="lesson01.md">📄 テキスト</a>
-                <a class="btn btn-html" href="lesson01.html">🌐 HTML</a>
-            </div>
-        </a>
-
-        <a class="lesson-card" href="#">
-            <span class="lesson-number">第2回</span>
-            <h2>図鑑の説明を書こう！</h2>
-            <p>生き物の名前・説明・場所をテキストや箇条書きで表示してみよう。</p>
-            <div class="lesson-links">
-                <a class="btn btn-md" href="lesson02.md">📄 テキスト</a>
-                <a class="btn btn-html" href="lesson02.html">🌐 HTML</a>
-            </div>
-        </a>
-
-        <a class="lesson-card" href="#">
-            <span class="lesson-number">第3回</span>
-            <h2>図鑑に色をつけよう！</h2>
-            <p>CSSを使って文字や背景に自分の好きな色をつけてみよう。</p>
-            <div class="lesson-links">
-                <a class="btn btn-md" href="lesson03.md">📄 テキスト</a>
-                <a class="btn btn-html" href="lesson03.html">🌐 HTML</a>
-            </div>
-        </a>
-
-        <a class="lesson-card" href="#">
-            <span class="lesson-number">第4回</span>
-            <h2>草花や虫の写真を入れよう！</h2>
-            <p>imgタグを使って画像を表示し、図鑑らしくしていこう。</p>
-            <div class="lesson-links">
-                <a class="btn btn-md" href="lesson04.md">📄 テキスト</a>
-                <a class="btn btn-html" href="lesson04.html">🌐 HTML</a>
-            </div>
-        </a>
-
-        <a class="lesson-card" href="#">
-            <span class="lesson-number">第5回</span>
-            <h2>図鑑っぽくタイル状に並べよう！</h2>
-            <p>divとFlexboxを使って、生き物のカードを横にタイル状に並べよう。</p>
-            <div class="lesson-links">
-                <a class="btn btn-md" href="lesson05.md">📄 テキスト</a>
-                <a class="btn btn-html" href="lesson05.html">🌐 HTML</a>
-            </div>
-        </a>
-
-        <a class="lesson-card" href="#">
-            <span class="lesson-number">第6回</span>
-            <h2>図鑑のデザインをかっこよくしよう！</h2>
-            <p>角丸・影・余白を追加して、本物のアプリみたいなデザインに仕上げよう。</p>
-            <div class="lesson-links">
-                <a class="btn btn-md" href="lesson06.md">📄 テキスト</a>
-                <a class="btn btn-html" href="lesson06.html">🌐 HTML</a>
-            </div>
-        </a>
-
-        <a class="lesson-card" href="#">
-            <span class="lesson-number">第7回</span>
-            <h2>JavaScriptって？</h2>
-            <p>Webページを動かすJavaScriptの基本を学ぼう。変数やコンソールを体験！</p>
-            <div class="lesson-links">
-                <a class="btn btn-md" href="lesson07.md">📄 テキスト</a>
-                <a class="btn btn-html" href="lesson07.html">🌐 HTML</a>
-            </div>
-        </a>
-
-        <a class="lesson-card" href="#">
-            <span class="lesson-number">第8回</span>
-            <h2>写真をクリックして動かそう！</h2>
-            <p>onclickイベントとalertを使って、クリックに反応するページを作ろう。</p>
-            <div class="lesson-links">
-                <a class="btn btn-md" href="lesson08.md">📄 テキスト</a>
-                <a class="btn btn-html" href="lesson08.html">🌐 HTML</a>
-            </div>
-        </a>
-
-        <a class="lesson-card" href="#">
-            <span class="lesson-number">第9回</span>
-            <h2>データをJavaScriptで持とう！</h2>
-            <p>配列とオブジェクトで、図鑑の情報をJavaScript側でまとめて管理しよう。</p>
-            <div class="lesson-links">
-                <a class="btn btn-md" href="lesson09.md">📄 テキスト</a>
-                <a class="btn btn-html" href="lesson09.html">🌐 HTML</a>
-            </div>
-        </a>
-
-        <a class="lesson-card" href="#">
-            <span class="lesson-number">第10回</span>
-            <h2>データから図鑑のタイルを作ろう！</h2>
-            <p>forEachとinnerHTMLで、JavaScriptのデータから自動的にHTML要素を生成しよう。</p>
-            <div class="lesson-links">
-                <a class="btn btn-md" href="lesson10.md">📄 テキスト</a>
-                <a class="btn btn-html" href="lesson10.html">🌐 HTML</a>
-            </div>
-        </a>
-
-        <a class="lesson-card" href="#">
-            <span class="lesson-number">第11回</span>
-            <h2>図鑑に新しい生き物を追加しよう！</h2>
-            <p>入力フォームを作って、ボタンを押すと図鑑に追加できるようにしよう。</p>
-            <div class="lesson-links">
-                <a class="btn btn-md" href="lesson11.md">📄 テキスト</a>
-                <a class="btn btn-html" href="lesson11.html">🌐 HTML</a>
-            </div>
-        </a>
-
-        <a class="lesson-card" href="#">
-            <span class="lesson-number">第12回</span>
-            <h2>オリジナル図鑑の完成！🎉</h2>
-            <p>全12回の総まとめ！完成した図鑑をカスタマイズして、自分だけの作品にしよう。</p>
-            <div class="lesson-links">
-                <a class="btn btn-md" href="lesson12.md">📄 テキスト</a>
-                <a class="btn btn-html" href="lesson12.html">🌐 HTML</a>
-            </div>
-        </a>
-
+    <div class="hero">
+        <div class="container">
+            <h1>🌿 図鑑Webサービスを作ろう 🐛</h1>
+            <p>HTML・CSS・JavaScriptを使って、草花や虫などの写真・場所・メモを登録して<br>タイル表示できる「自分だけの図鑑」を作ろう！</p>
+            <a href="lesson01.html" class="start-btn">さっそく始める 🚀</a>
+        </div>
     </div>
 
-    <footer>
-        <p>🌱 図鑑Webサービス教材 | HTML / CSS / JavaScript で作るプログラミング入門</p>
-    </footer>
+    <div class="container">
+        <h2 class="section-title">カリキュラム一覧</h2>
+
+        <div class="lesson-grid">
+
+            <a href="lesson01.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 01</span><span>📄</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">図鑑のベースを作ろう！</h3>
+                    <p class="card-desc">HTMLファイルを作成してブラウザに「わたしの図鑑」を表示させる。</p>
+                    <div class="tag-container"><span class="tag html">HTML</span></div>
+                </div>
+            </a>
+
+            <a href="lesson02.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 02</span><span>📝</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">図鑑の説明を書こう！</h3>
+                    <p class="card-desc">p・ul・liタグを使って生き物の名前・説明・見つけた場所をテキストで書く。</p>
+                    <div class="tag-container"><span class="tag html">HTML</span></div>
+                </div>
+            </a>
+
+            <a href="lesson03.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 03</span><span>🎨</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">図鑑に色をつけよう！</h3>
+                    <p class="card-desc">CSSのcolorとbackground-colorで文字色・背景色をカラフルにする。</p>
+                    <div class="tag-container"><span class="tag css">CSS</span></div>
+                </div>
+            </a>
+
+            <a href="lesson04.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 04</span><span>🖼️</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">写真を入れよう！</h3>
+                    <p class="card-desc">imgタグのsrc・alt・widthを使って草花や虫の写真を表示する。</p>
+                    <div class="tag-container"><span class="tag html">HTML</span></div>
+                </div>
+            </a>
+
+            <a href="lesson05.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 05</span><span>⬜</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">タイル状に並べよう！</h3>
+                    <p class="card-desc">divタグとFlexboxを使って図鑑カードを横並びのタイル表示にする。</p>
+                    <div class="tag-container"><span class="tag html">HTML</span><span class="tag css">CSS</span></div>
+                </div>
+            </a>
+
+            <a href="lesson06.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 06</span><span>✨</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">デザインをかっこよくしよう！</h3>
+                    <p class="card-desc">border-radiusで角を丸く、box-shadowでふんわり影をつける。</p>
+                    <div class="tag-container"><span class="tag css">CSS</span></div>
+                </div>
+            </a>
+
+            <a href="lesson07.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 07</span><span>⚡</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">JavaScriptって？</h3>
+                    <p class="card-desc">scriptタグ・console.log・変数（let）でプログラミングの第一歩を踏み出す。</p>
+                    <div class="tag-container"><span class="tag js">JavaScript</span></div>
+                </div>
+            </a>
+
+            <a href="lesson08.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 08</span><span>🖱️</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">写真をクリックして動かそう！</h3>
+                    <p class="card-desc">onclickイベントとalert()で写真をクリックするとポップアップが出る機能を作る。</p>
+                    <div class="tag-container"><span class="tag js">JavaScript</span></div>
+                </div>
+            </a>
+
+            <a href="lesson09.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 09</span><span>📦</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">データをJavaScriptで持とう！</h3>
+                    <p class="card-desc">オブジェクト{ }と配列[ ]で図鑑データをJavaScriptで管理する。</p>
+                    <div class="tag-container"><span class="tag js">JavaScript</span></div>
+                </div>
+            </a>
+
+            <a href="lesson10.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 10</span><span>🔁</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">データから自動でタイルを作ろう！</h3>
+                    <p class="card-desc">getElementById・forEach・innerHTMLでデータからタイルを自動生成する。</p>
+                    <div class="tag-container"><span class="tag js">JavaScript</span></div>
+                </div>
+            </a>
+
+            <a href="lesson11.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 11</span><span>➕</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">新しい生き物を追加しよう！</h3>
+                    <p class="card-desc">inputフォームとfunctionを使ってボタン1つで図鑑にカードを追加できるようにする。</p>
+                    <div class="tag-container"><span class="tag js">JavaScript</span><span class="tag html">HTML</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="lesson12.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 12</span><span>🎉</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">オリジナル図鑑の完成！</h3>
+                    <p class="card-desc">全12回の総復習と完成版コード。自分だけの図鑑をカスタマイズして仕上げよう！</p>
+                    <div class="tag-container"><span class="tag app">Complete</span></div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
 </body>
 
 </html>
