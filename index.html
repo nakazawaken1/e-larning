@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プログラミング学習ポータル</title>
+    <style>
+        :root {
+            --primary-blue: #4f46e5;
+            --primary-green: #2e8b57;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+            border-bottom-left-radius: 60px;
+            border-bottom-right-radius: 60px;
+            margin-bottom: 60px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin: 0 0 20px;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px 80px;
+            width: 100%;
+        }
+
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 40px;
+        }
+
+        .portal-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+            color: var(--text);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .portal-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-image {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            transition: transform 0.4s ease;
+        }
+
+        .portal-card:hover .card-image {
+            transform: scale(1.1);
+        }
+
+        .jikanwari-card .card-image {
+            background: linear-gradient(135deg, var(--primary-blue), #4338ca);
+        }
+
+        .zukan-card .card-image {
+            background: linear-gradient(135deg, var(--primary-green), #1a5c39);
+        }
+
+        .card-content {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .card-title {
+            font-size: 1.75rem;
+            margin: 0 0 15px;
+            font-weight: 700;
+        }
+
+        .card-desc {
+            font-size: 1rem;
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-weight: 700;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .jikanwari-btn {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .zukan-btn {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        .portal-card:hover .btn {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 40px 20px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 2.25rem;
+            }
+
+            .hero {
+                padding: 60px 20px;
+            }
+
+            .portal-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="hero">
+        <div class="container">
+            <h1>Programming Course</h1>
+            <p>HTML、CSS、JavaScriptを学んで、<br>自分だけのウェブアプリやサービスを作ってみよう！</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="portal-grid">
+
+            <!-- Jikanwari Box -->
+            <a href="./jikanwari/index.html" class="portal-card jikanwari-card">
+                <div class="card-image">📅</div>
+                <div class="card-content">
+                    <h2 class="card-title">時間割アプリ</h2>
+                    <p class="card-desc">毎日の予定を管理できる、実用的な時間割アプリの開発に挑戦します。</p>
+                    <span class="btn jikanwari-btn">学習を始める</span>
+                </div>
+            </a>
+
+            <!-- Zukan Box -->
+            <a href="./zukan/index.html" class="portal-card zukan-card">
+                <div class="card-image">🌿</div>
+                <div class="card-content">
+                    <h2 class="card-title">自分だけの図鑑</h2>
+                    <p class="card-desc">草花や虫などの情報を記録して、タイル状に表示する図鑑サービスを作ります。</p>
+                    <span class="btn zukan-btn">学習を始める</span>
+                </div>
+            </a>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Programming Learning Course</p>
+    </footer>
+
+</body>
+
+</html>
