@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第1回：Webページを作ってみよう！ - 英単語クイズを作ろう</title>
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-light: #7dd3fc;
+            --secondary: #f43f5e;
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            margin-bottom: 40px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .goal-box {
+            background-color: #f0f9ff;
+            border-left: 5px solid var(--primary);
+            padding: 20px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        pre {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+
+        .check-box {
+            background-color: #f0fdf4;
+            border-left: 5px solid #22c55e;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 20px;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: var(--text);
+            font-weight: bold;
+        }
+
+        .quiz-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        .check-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .feedback {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .complete-preview { margin-top: 20px; text-align: center; }
+        .complete-preview iframe { width: 100%; height: 250px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 2px solid #e2e8f0; background: white; }
+    </style>
+</head>
+
+<body>
+    <div class="hero">
+        <div class="container">
+            <h1>第1回：Webページを作ってみよう！<br>最初のHTMLファイル</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>今日のゴール 🎯</h2>
+            <div class="goal-box">「英単語クイズ」というタイトルが表示されるWebページを作る！</div>
+            <div class="complete-preview">
+                <p>💡 完成イメージ（触ってみてね！）</p>
+                <iframe src="samples/lesson01.html"></iframe>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>学ぶこと 📚</h2>
+            <ul>
+                <li>Webページはどうやって動いているの？</li>
+                <li>HTMLファイルって何？</li>
+                <li>ブラウザでファイルを開く方法</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>やってみよう！ 💻</h2>
+            <h3>1. ファイルを作ろう</h3>
+            <p><code>index.html</code> という名前のファイルを作成します。</p>
+            <h3>2. HTMLを書こう</h3>
+            <pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;英単語クイズ&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;英単語クイズ&lt;/h1&gt;
+  &lt;p&gt;これからクイズアプリを作っていくよ！&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+        </div>
+
+        <div class="card">
+            <h2>理解度チェック ✅</h2>
+            <div class="check-box">
+                <div class="quiz-item">
+                    <p>Q1. HTMLファイルの最後につける名前（拡張子）は？</p>
+                    <input type="radio" name="q1" id="q1a" value="correct"> <label for="q1a">.html</label>
+                    <input type="radio" name="q1" id="q1b" value="wrong"> <label for="q1b">.txt</label>
+                </div>
+                <div class="quiz-item">
+                    <p>Q2. 「これはHTMLファイルです」と宣言するタグは？</p>
+                    <input type="radio" name="q2" id="q2a" value="correct"> <label for="q2a">&lt;!DOCTYPE html&gt;</label>
+                    <input type="radio" name="q2" id="q2b" value="wrong"> <label for="q2b">&lt;html&gt;</label>
+                </div>
+                <div class="quiz-item">
+                    <p>Q3. ブラウザに表示される「中身」を書く場所は？</p>
+                    <input type="radio" name="q3" id="q3a" value="wrong"> <label for="q3a">&lt;head&gt;</label>
+                    <input type="radio" name="q3" id="q3b" value="correct"> <label for="q3b">&lt;body&gt;</label>
+                </div>
+                <div class="quiz-item">
+                    <p>Q4. 一番大きな見出しを表示するタグは？</p>
+                    <input type="radio" name="q4" id="q4a" value="correct"> <label for="q4a">&lt;h1&gt;</label>
+                    <input type="radio" name="q4" id="q4b" value="wrong"> <label for="q4b">&lt;p&gt;</label>
+                </div>
+                <div class="quiz-item">
+                    <p>Q5. ページのタイトルなどの「設定」を書く場所は？</p>
+                    <input type="radio" name="q5" id="q5a" value="correct"> <label for="q5a">&lt;head&gt;</label>
+                    <input type="radio" name="q5" id="q5b" value="wrong"> <label for="q5b">&lt;body&gt;</label>
+                </div>
+                <button class="check-btn" onclick="checkAnswers()">答え合わせ</button>
+                <div id="result" class="feedback"></div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="index.html" class="nav-btn">目次へ</a>
+            <a href="lesson02.html" class="nav-btn">次のレッスン →</a>
+        </div>
+    </div>
+
+    <script>
+        function checkAnswers() {
+            let correctCount = 0;
+            const total = 5;
+            for (let i = 1; i <= total; i++) {
+                const checked = document.querySelector(`input[name="q${i}"]:checked`);
+                if (checked && checked.value === 'correct') {
+                    correctCount++;
+                }
+            }
+            
+            const result = document.getElementById('result');
+            result.style.display = 'block';
+            if (correctCount === total) {
+                result.innerHTML = `全問正解！おめでとう！🎉（${correctCount}/${total}）`;
+                result.style.backgroundColor = '#dcfce7';
+            } else {
+                result.innerHTML = `${correctCount}/${total} 正解！あともう少しだね！💪`;
+                result.style.backgroundColor = '#fef9c3';
+            }
+        }
+    </script>
+</body>
+</html>

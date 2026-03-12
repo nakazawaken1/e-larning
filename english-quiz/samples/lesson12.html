@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .header { margin-bottom: 20px; text-align: center; }
+        .score { font-size: 20px; font-weight: bold; color: #0ea5e9; }
+        .quiz-container { background: white; padding: 40px; border-radius: 30px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); text-align: center; width: 85%; max-width: 400px; border: 4px solid #7dd3fc; }
+        #question { font-size: 32px; font-weight: bold; color: #0f172a; margin-bottom: 30px; }
+        .options { display: flex; flex-direction: column; gap: 15px; }
+        button { padding: 18px; border: none; border-radius: 15px; background: #f1f5f9; color: #334155; font-weight: bold; cursor: pointer; font-size: 18px; transition: all 0.3s; }
+        button:hover { background: #0ea5e9; color: white; transform: scale(1.02); }
+        .correct-anim { animation: win 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); background: #22c55e !important; color: white !important; }
+        @keyframes win {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1) rotate(2deg); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="score">Score: 100</div>
+    </div>
+    <div class="quiz-container">
+        <div id="question">Apple 🍎</div>
+        <div class="options">
+            <button class="correct-anim">りんご</button>
+            <button>ばなな</button>
+            <button>みかん</button>
+        </div>
+    </div>
+</body>
+</html>

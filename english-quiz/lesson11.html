@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第8回〜第12回：仕上げと完成 - 英単語クイズを作ろう</title>
+    <style>
+        :root { --primary: #0ea5e9; --primary-light: #7dd3fc; --secondary: #f43f5e; --bg: #f8fafc; --text: #0f172a; --card-bg: #ffffff; }
+        body { font-family: sans-serif; background-color: var(--bg); color: var(--text); line-height: 1.6; margin: 0; padding: 0; }
+        .hero { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 40px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; margin-bottom: 40px; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .card { background: white; border-radius: 15px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        h2 { color: var(--primary); border-bottom: 2px solid var(--primary-light); padding-bottom: 8px; }
+        pre { background: #1e293b; color: #f8fafc; padding: 15px; border-radius: 10px; overflow-x: auto; }
+        .navigation { display: flex; justify-content: space-between; margin-top: 30px; border-top: 1px solid #ddd; padding-top: 20px; }
+        .nav-btn { text-decoration: none; padding: 10px 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); color: var(--text); font-weight: bold; }
+        .check-box { background-color: #f0fdf4; border-left: 5px solid #22c55e; padding: 20px; border-radius: 10px; }
+        .quiz-item { margin-bottom: 20px; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; }
+        .check-btn { background-color: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; }
+        .feedback { display: none; margin-top: 10px; padding: 10px; border-radius: 5px; }
+        .complete-preview { margin-top: 20px; text-align: center; }
+        .complete-preview iframe { width: 100%; height: 450px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 2px solid #e2e8f0; background: white; }
+    </style>
+</head>
+<body>
+    <div class="hero"><div class="container"><h1>第11回：タブレットでも見やすくしよう</h1></div></div>
+    <div class="container">
+        <div class="card">
+            <h2>今日のゴール 🎯</h2>
+            <p>スマホやタブレット、パソコン、どんな画面でもきれいに見えるようにする！</p>
+            <div class="complete-preview">
+                <p>💡 完成イメージ（触ってみてね！）</p>
+                <iframe src="samples/lesson11.html"></iframe>
+            </div>
+        </div>
+        <div class="card">
+            <h2>理解度チェック ✅</h2>
+            <div class="check-box">
+                <div class="quiz-item">
+                    <p>Q1. 画面サイズに合わせて勝手に変わるデザインは？</p>
+                    <input type="radio" name="q1" id="q1a" value="correct"> <label for="q1a">レスポンシブ</label>
+                    <input type="radio" name="q1" id="q1b" value="wrong"> <label for="q1b">オートサイズ</label>
+                </div>
+                <div class="quiz-item">
+                    <p>Q2. 画面サイズを指定する「おまじない」は？</p>
+                    <input type="radio" name="q2" id="q2a" value="wrong"> <label for="q2a">screen-ctrl</label>
+                    <input type="radio" name="q2" id="q2b" value="correct"> <label for="q2b">viewport（ビューポート）</label>
+                </div>
+                <div class="quiz-item">
+                    <p>Q3. 幅を自由に伸び縮みさせる単位は？</p>
+                    <input type="radio" name="q3" id="q3a" value="correct"> <label for="q3a">%（パーセント）</label>
+                    <input type="radio" name="q3" id="q3b" value="wrong"> <label for="q3b">px（ピクセル）</label>
+                </div>
+                <div class="quiz-item">
+                    <p>Q4. 特定の画面幅のときだけスタイルを変える命令は？</p>
+                    <input type="radio" name="q4" id="q4a" value="wrong"> <label for="q4a">@device</label>
+                    <input type="radio" name="q4" id="q4b" value="correct"> <label for="q4b">@media</label>
+                </div>
+                <div class="quiz-item">
+                    <p>Q5. max-width: 500px とはどんな意味？</p>
+                    <input type="radio" name="q5" id="q5a" value="correct"> <label for="q5a">最大でも500pxまで</label>
+                    <input type="radio" name="q5" id="q5b" value="wrong"> <label for="q5b">常に500pxにする</label>
+                </div>
+                <button class="check-btn" onclick="checkAnswers()">答え合わせ</button>
+                <div id="result" class="feedback"></div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="lesson10.html" class="nav-btn">← 前へ</a>
+            <a href="index.html" class="nav-btn">目次へ</a>
+            <a href="lesson12.html" class="nav-btn">次へ →</a>
+        </div>
+    </div>
+    <script>
+        function checkAnswers() {
+            let correctCount = 0;
+            const total = 5;
+            for (let i = 1; i <= total; i++) {
+                const checked = document.querySelector(`input[name="q${i}"]:checked`);
+                if (checked && checked.value === 'correct') {
+                    correctCount++;
+                }
+            }
+            const result = document.getElementById('result');
+            result.style.display = 'block';
+            if (correctCount === total) {
+                result.innerHTML = `全問正解！どんな画面でもバッチリだね！📱（${correctCount}/${total}）`;
+                result.style.backgroundColor = '#dcfce7';
+            } else {
+                result.innerHTML = `${correctCount}/${total} 正解！ブラウザを動かして見てみよう！`;
+                result.style.backgroundColor = '#fef9c3';
+            }
+        }
+    </script>
+</body>
+</html>

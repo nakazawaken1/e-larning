@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: sans-serif; background: #f1f5f9; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; gap: 10px; }
+        .quiz-container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); text-align: center; width: 80%; max-width: 300px; }
+        #question { font-size: 24px; font-weight: bold; color: #1e293b; margin-bottom: 20px; }
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        button { padding: 12px; border: none; border-radius: 10px; background: #e2e8f0; color: #475569; font-weight: bold; cursor: pointer; }
+        button:hover { background: #0ea5e9; color: white; }
+        #next-btn { background: #22c55e; color: white; padding: 10px 20px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div id="question">apple</div>
+        <div class="options">
+            <button onclick="check('りんご')">りんご</button>
+            <button onclick="check('ばなな')">ばなな</button>
+            <button onclick="check('みかん')">みかん</button>
+        </div>
+    </div>
+    <button id="next-btn" onclick="nextQuestion()">次の問題</button>
+
+    <script>
+        const words = [
+            { eng: "apple", jpn: "りんご" },
+            { eng: "banana", jpn: "ばなな" },
+            { eng: "orange", jpn: "みかん" }
+        ];
+        let currentWord;
+
+        function nextQuestion() {
+            const index = Math.floor(Math.random() * words.length);
+            currentWord = words[index];
+            document.getElementById('question').innerText = currentWord.eng;
+        }
+
+        function check(choice) {
+            if (choice === currentWord.jpn) alert('正解！');
+            else alert('ざんねん...');
+        }
+        nextQuestion();
+    </script>
+</body>
+</html>

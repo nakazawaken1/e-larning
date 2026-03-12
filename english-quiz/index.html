@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英単語クイズを作ろう - プログラミング入門コース</title>
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-light: #7dd3fc;
+            --secondary: #f43f5e;
+            --secondary-light: #fb7185;
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary), #0284c7);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.4);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin: 0 0 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 40px;
+        }
+
+        .lesson-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .lesson-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            text-decoration: none;
+            color: var(--text);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-light);
+        }
+
+        .card-header {
+            background: #f1f5f9;
+            padding: 15px 20px;
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .card-body {
+            padding: 25px;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            margin: 0 0 10px;
+            font-weight: bold;
+        }
+
+        .card-desc {
+            font-size: 0.95rem;
+            color: #64748b;
+        }
+
+        .start-btn {
+            display: inline-block;
+            background: white;
+            color: var(--primary);
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="hero">
+        <div class="container">
+            <h1>英単語クイズを作ろう</h1>
+            <p>100個の単語をマスターするクイズアプリを、<br>プログラミングで作ってみよう！</p>
+            <a href="lesson01.html" class="start-btn">学習を始める 🚀</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="section-title">カリキュラム一覧</h2>
+        <div class="lesson-grid" id="lesson-grid">
+            <!-- JavaScriptでレッスンを表示しても良いが、今回は直書き -->
+            <a href="lesson01.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 01</span><span>📝</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">Webページを作ろう</h3>
+                    <p class="card-desc">HTMLの基本を学び、最初のファイルを作成します。</p>
+                </div>
+            </a>
+            <a href="lesson02.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 02</span><span>🎨</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">色とデザイン</h3>
+                    <p class="card-desc">CSSを使って文字の色や背景をおしゃれに変えます。</p>
+                </div>
+            </a>
+            <a href="lesson03.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 03</span><span>📦</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">クイズの骨組み</h3>
+                    <p class="card-desc">問題文やボタンをHTMLタグで配置します。</p>
+                </div>
+            </a>
+            <a href="lesson04.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 04</span><span>💅</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">ボタンのデザイン</h3>
+                    <p class="card-desc">CSSでプロっぽいボタンにお色直しします。</p>
+                </div>
+            </a>
+            <a href="lesson05.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 05</span><span>⚡</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">ボタンを動かす</h3>
+                    <p class="card-desc">JavaScriptでクリックに反応する魔法をかけます。</p>
+                </div>
+            </a>
+            <a href="lesson06.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 06</span><span>❓</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">正解判定</h3>
+                    <p class="card-desc">コンピュータに正解かどうかを判断させます。</p>
+                </div>
+            </a>
+            <a href="lesson07.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 07</span><span>📚</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">100単語リスト</h3>
+                    <p class="card-desc">たくさんの単語を「配列」で管理します。</p>
+                </div>
+            </a>
+            <a href="lesson08.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 08</span><span>🎲</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">ランダム出題</h3>
+                    <p class="card-desc">毎回ちがうクイズが出るようにします。</p>
+                </div>
+            </a>
+            <a href="lesson09.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 09</span><span>💯</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">点数を数える</h3>
+                    <p class="card-desc">正解数を記録して画面に表示します。</p>
+                </div>
+            </a>
+            <a href="lesson10.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 10</span><span>✨</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">お楽しみ演出</h3>
+                    <p class="card-desc">アニメーションでクイズを盛り上げます。</p>
+                </div>
+            </a>
+            <a href="lesson11.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 11</span><span>📱</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">スマホ対応</h3>
+                    <p class="card-desc">タブレットやスマホでも遊びやすくします。</p>
+                </div>
+            </a>
+            <a href="lesson12.html" class="lesson-card">
+                <div class="card-header"><span>Lesson 12</span><span>🎉</span></div>
+                <div class="card-body">
+                    <h3 class="card-title">自分だけのクイズ</h3>
+                    <p class="card-desc">自由に改造して世界で一つのアプリを完成させます！</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
