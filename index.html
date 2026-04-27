@@ -112,6 +112,10 @@
             background: linear-gradient(135deg, #f43f5e, #be123c);
         }
 
+        .todo-card .card-image {
+            background: linear-gradient(135deg, #f59e0b, #ff6b9e);
+        }
+
         .card-content {
             padding: 30px;
             text-align: center;
@@ -152,6 +156,26 @@
         .english-btn {
             background: #f43f5e;
             color: white;
+        }
+
+        .todo-btn {
+            background: linear-gradient(135deg, #f59e0b, #ff6b9e);
+            color: white;
+        }
+
+        .badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: #ffd166;
+            color: #92400e;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 999px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 0.05em;
+            z-index: 1;
         }
 
         .portal-card:hover .btn {
@@ -195,6 +219,18 @@
     <main class="container">
         <div class="portal-grid">
 
+            <!-- Todo App Tutorial Box -->
+            <a href="./todo-app-tutorial.html" class="portal-card todo-card">
+                <span class="badge">🎬 アニメーション</span>
+                <div class="card-image">📝</div>
+                <div class="card-content">
+                    <h2 class="card-title">Todoアプリのつくりかた</h2>
+                    <p class="card-desc">HTML・CSS・JavaScriptを使って、やることリストを管理するアプリを作る手順を、コードと実行画面を見比べながらアニメーションで学べます。</p>
+                    <span class="btn todo-btn">アニメーションを見る</span>
+                </div>
+            </a>
+
+
             <!-- Jikanwari Box -->
             <a href="./jikanwari/index.html" class="portal-card jikanwari-card">
                 <div class="card-image">📅</div>
@@ -224,7 +260,6 @@
                     <span class="btn english-btn">学習を始める</span>
                 </div>
             </a>
-
         </div>
     </main>
 

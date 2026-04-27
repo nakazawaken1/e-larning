@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Todoアプリのつくりかた｜アニメーションでまなぼう！</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    font-family: "Hiragino Maru Gothic ProN", "M PLUS Rounded 1c", "Yu Gothic", sans-serif;
+    background: linear-gradient(135deg, #ffe7c2 0%, #ffd6e0 50%, #c2f0ff 100%);
+    color: #333;
+    overflow: hidden;
+  }
+  .stage {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+  }
+  header h1 {
+    font-size: 28px;
+    color: #ff6b9e;
+    text-shadow: 2px 2px 0 #fff;
+    letter-spacing: 2px;
+  }
+  .step-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .step-dot {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #aaa;
+    font-size: 14px;
+    transition: all 0.4s;
+  }
+  .step-dot.active {
+    background: #ffd166;
+    border-color: #ff9f1c;
+    color: #fff;
+    transform: scale(1.15);
+    box-shadow: 0 4px 0 #e08c00;
+  }
+  .step-dot.done {
+    background: #06d6a0;
+    border-color: #04a87f;
+    color: #fff;
+  }
+  .step-label {
+    font-size: 11px;
+    margin-top: 4px;
+    color: #777;
+    text-align: center;
+  }
+  .step-wrap { display: flex; flex-direction: column; align-items: center; }
+
+  .character-area {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    margin: 6px 0;
+    min-height: 70px;
+    flex-shrink: 0;
+  }
+  .character {
+    font-size: 56px;
+    animation: bounce 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .speech-bubble {
+    background: #fff;
+    border: 3px solid #ff6b9e;
+    border-radius: 18px;
+    padding: 10px 16px;
+    font-size: 17px;
+    line-height: 1.5;
+    position: relative;
+    flex: 1;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 0 rgba(255,107,158,0.3);
+  }
+  .speech-bubble::before {
+    content: "";
+    position: absolute;
+    left: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 10px solid transparent;
+    border-right-color: #ff6b9e;
+  }
+  .speech-bubble::after {
+    content: "";
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 8px solid transparent;
+    border-right-color: #fff;
+  }
+
+  .split-view {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    min-height: 0;
+  }
+  .panel {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 6px 0 rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+  }
+  .panel-header {
+    background: #2d3748;
+    color: #fff;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .panel-header.preview {
+    background: #06d6a0;
+  }
+  .traffic-lights {
+    display: inline-flex;
+    gap: 5px;
+    margin-right: 6px;
+  }
+  .traffic-lights span {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #ff5f56;
+  }
+  .traffic-lights span:nth-child(2) { background: #ffbd2e; }
+  .traffic-lights span:nth-child(3) { background: #27c93f; }
+
+  .source-tabs {
+    display: none;
+    gap: 4px;
+    margin-left: 8px;
+    flex-wrap: wrap;
+  }
+  .source-tabs.visible { display: flex; }
+  .source-tabs .tab {
+    background: #4a5568;
+    color: #cbd5e0;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .source-tabs .tab:hover { background: #718096; color: #fff; }
+  .source-tabs .tab.active {
+    background: #1a202c;
+    color: #ffd166;
+    box-shadow: 0 -2px 0 #ffd166 inset;
+  }
+
+  #codeDisplay {
+    flex: 1;
+    background: #1a202c;
+    color: #e2e8f0;
+    font-family: "Menlo", "Consolas", monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    padding: 14px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+    margin: 0;
+  }
+  #codeDisplay .tag { color: #f687b3; }
+  #codeDisplay .attr { color: #fbd38d; }
+  #codeDisplay .str { color: #9ae6b4; }
+  #codeDisplay .key { color: #b794f4; }
+  #codeDisplay .com { color: #718096; font-style: italic; }
+  #codeDisplay .num { color: #fbb6ce; }
+  #codeDisplay .fn { color: #63b3ed; }
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 16px;
+    background: #ffd166;
+    vertical-align: text-bottom;
+    animation: blink 1s steps(2, start) infinite;
+  }
+  @keyframes blink { to { visibility: hidden; } }
+
+  #preview {
+    flex: 1;
+    border: none;
+    background: #fff;
+    width: 100%;
+  }
+
+  .controls {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+  }
+  .controls button {
+    background: #fff;
+    border: 3px solid #ff6b9e;
+    color: #ff6b9e;
+    padding: 8px 18px;
+    border-radius: 24px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 0 rgba(255,107,158,0.4);
+    font-family: inherit;
+  }
+  .controls button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 rgba(255,107,158,0.4);
+  }
+  .controls button:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(255,107,158,0.4);
+  }
+  .controls button.primary {
+    background: #ff6b9e;
+    color: #fff;
+  }
+
+  /* Confetti */
+  .confetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  /* Title screen */
+  #titleScreen {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #ff9a8b, #ff6b9e, #c084fc);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 50;
+    transition: opacity 0.6s;
+  }
+  #titleScreen.hidden { opacity: 0; pointer-events: none; }
+  #titleScreen .big-title {
+    font-size: 52px;
+    color: #fff;
+    text-shadow: 4px 4px 0 rgba(0,0,0,0.2);
+    margin-bottom: 14px;
+    text-align: center;
+    line-height: 1.3;
+  }
+  #titleScreen .sub {
+    font-size: 22px;
+    color: #fff;
+    margin-bottom: 28px;
+  }
+  #titleScreen .start-btn {
+    background: #fff;
+    color: #ff6b9e;
+    border: none;
+    padding: 16px 44px;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 34px;
+    cursor: pointer;
+    box-shadow: 0 8px 0 rgba(0,0,0,0.2);
+    font-family: inherit;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+  }
+  #titleScreen .floaters {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  #titleScreen .floaters span {
+    position: absolute;
+    font-size: 36px;
+    animation: float 6s linear infinite;
+    opacity: 0.7;
+  }
+  @keyframes float {
+    from { transform: translateY(110vh) rotate(0deg); }
+    to { transform: translateY(-20vh) rotate(360deg); }
+  }
+</style>
+</head>
+<body>
+
+<div id="titleScreen">
+  <div class="floaters">
+    <span style="left:5%; animation-delay:0s">📝</span>
+    <span style="left:18%; animation-delay:1s">✨</span>
+    <span style="left:32%; animation-delay:2s">💻</span>
+    <span style="left:48%; animation-delay:0.5s">🎈</span>
+    <span style="left:62%; animation-delay:3s">🌟</span>
+    <span style="left:76%; animation-delay:1.5s">📋</span>
+    <span style="left:90%; animation-delay:2.5s">🎉</span>
+  </div>
+  <div class="big-title">Todoアプリを<br>つくろう！</div>
+  <div class="sub">〜 HTML・CSS・JavaScript で 〜</div>
+  <button class="start-btn" id="startBtn">▶ スタート</button>
+</div>
+
+<div class="stage">
+  <header>
+    <h1>📝 Todoアプリのつくりかた</h1>
+    <div class="step-indicator" id="stepIndicator"></div>
+  </header>
+
+  <div class="character-area">
+    <div class="character" id="character">🐼</div>
+    <div class="speech-bubble" id="speech">こんにちは！いっしょにTodoアプリをつくろう！</div>
+  </div>
+
+  <div class="split-view">
+    <div class="panel">
+      <div class="panel-header">
+        <span class="traffic-lights"><span></span><span></span><span></span></span>
+        <span id="codeFileName">📝 index.html</span>
+        <div class="source-tabs" id="sourceTabs">
+          <button class="tab active" data-tab="summary">📋 まとめ</button>
+          <button class="tab" data-tab="html">📝 HTML</button>
+          <button class="tab" data-tab="css">🎨 CSS</button>
+          <button class="tab" data-tab="js">⚡ JS</button>
+        </div>
+      </div>
+      <pre id="codeDisplay"></pre>
+    </div>
+    <div class="panel">
+      <div class="panel-header preview">
+        👀 けっか（みためと うごき）
+      </div>
+      <iframe id="preview" sandbox="allow-scripts"></iframe>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="prevBtn">◀ もどる</button>
+    <button id="playPauseBtn" class="primary">⏸ ストップ</button>
+    <button id="nextBtn">つぎ ▶</button>
+    <button id="restartBtn">🔄 さいしょから</button>
+    <button id="speedBtn">⚡ はやさ x1</button>
+  </div>
+</div>
+
+<canvas class="confetti-canvas" id="confetti"></canvas>
+
+<script>
+// =============================================================
+// シナリオ：6ステップでTodoアプリを完成させる
+// =============================================================
+
+const STEPS = [
+  {
+    title: "1",
+    label: "じゅんび",
+    fileName: "📝 index.html",
+    speech: "まずは「ハコ」をつくるよ。HTMLでがめんの ほねぐみ をつくろう！",
+    char: "🐼",
+    code: `<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>わたしのTodo</title>
+</head>
+<body>
+  <h1>わたしのTodoリスト</h1>
+</body>
+</html>`,
+    preview: () => buildPreview(STEPS[0].code, "", "")
+  },
+  {
+    title: "2",
+    label: "いれもの",
+    fileName: "📝 index.html",
+    speech: "つぎに「やることをかくところ」と「ボタン」と「リスト」をたそう！",
+    char: "🐰",
+    code: `<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>わたしのTodo</title>
+</head>
+<body>
+  <h1>わたしのTodoリスト</h1>
+  <input id="taskInput" placeholder="やることをかいてね">
+  <button id="addBtn">ついか</button>
+  <ul id="taskList"></ul>
+</body>
+</html>`,
+    preview: () => buildPreview(STEPS[1].code, "", "")
+  },
+  {
+    title: "3",
+    label: "おしゃれ",
+    fileName: "🎨 style.css",
+    speech: "CSSでかわいく おしゃれ にしよう！いろや まるみ をつけるよ。",
+    char: "🐱",
+    code: `body {
+  font-family: sans-serif;
+  background: #fff5e1;
+  padding: 20px;
+  text-align: center;
+}
+h1 { color: #ff6b9e; }
+
+input, button {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 2px solid #ffb6c1;
+}
+button {
+  background: #06d6a0;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+ul { list-style: none; padding: 0; }
+li {
+  background: white;
+  padding: 12px;
+  margin: 8px auto;
+  max-width: 300px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}`,
+    preview: () => buildPreview(STEPS[1].code, STEPS[2].code, "")
+  },
+  {
+    title: "4",
+    label: "ついか",
+    fileName: "⚡ script.js",
+    speech: "JavaScriptで うごき をつけよう！ボタンを おすと リストにふえるよ✨",
+    char: "🦊",
+    code: `// ようそ（パーツ）をとってくる
+const input = document.getElementById('taskInput');
+const button = document.getElementById('addBtn');
+const list = document.getElementById('taskList');
+
+// ボタンが おされたとき
+button.addEventListener('click', () => {
+  const text = input.value;
+  if (text === '') return;
+
+  // あたらしいリストの こうもく をつくる
+  const li = document.createElement('li');
+  li.textContent = text;
+  list.appendChild(li);
+
+  // にゅうりょくらん を からっぽにする
+  input.value = '';
+});`,
+    preview: () => buildPreview(STEPS[1].code, STEPS[2].code, STEPS[3].code)
+  },
+  {
+    title: "5",
+    label: "けす",
+    fileName: "⚡ script.js",
+    speech: "おわった やること を「けす」きのうも つけよう！×ボタンで しゅっせきだ！",
+    char: "🐻",
+    code: `const input = document.getElementById('taskInput');
+const button = document.getElementById('addBtn');
+const list = document.getElementById('taskList');
+
+button.addEventListener('click', () => {
+  const text = input.value;
+  if (text === '') return;
+
+  const li = document.createElement('li');
+  li.textContent = text;
+
+  // ★ ここから ついか：けすボタンをつくる
+  const delBtn = document.createElement('button');
+  delBtn.textContent = '×';
+  delBtn.style.marginLeft = '10px';
+  delBtn.style.background = '#ff6b9e';
+  delBtn.onclick = () => li.remove();
+  li.appendChild(delBtn);
+  // ★ ここまで
+
+  list.appendChild(li);
+  input.value = '';
+});`,
+    preview: () => buildPreview(STEPS[1].code, STEPS[2].code, STEPS[4].code)
+  },
+  {
+    title: "6",
+    label: "かんせい",
+    fileName: "🎉 かんせい！",
+    speech: "やったー！Todoアプリの かんせい だよ🎉 みぎがわで うごかして あそんでみよう！",
+    char: "🎉",
+    code: `// 🎉 Todoアプリ かんせい！🎉
+//
+// やったこと：
+//   1. HTML で みためを つくった
+//   2. CSS で おしゃれに した
+//   3. JavaScript で うごき を つけた
+//
+// できること：
+//   ✅ やることを ついか できる
+//   ✅ おわったら × で けせる
+//
+// すごい！あなたは プログラマーに
+// いっぽ ちかづいた ね！
+//
+// つぎは じぶんの すきな いろ や
+// メッセージに かえてみよう✨`,
+    preview: () => buildPreview(STEPS[1].code, STEPS[2].code, STEPS[4].code, true)
+  }
+];
+
+// =============================================================
+// プレビュー（iframe）を組み立てる
+// =============================================================
+function buildPreview(html, css, js, autoFill = false) {
+  const bodyMatch = html.match(/<body>([\s\S]*?)<\/body>/);
+  const bodyContent = bodyMatch ? bodyMatch[1] : html;
+  const autoScript = autoFill ? `
+    setTimeout(() => {
+      ['しゅくだいをやる', 'おふろにはいる', 'はをみがく'].forEach((t, i) => {
+        setTimeout(() => {
+          const inp = document.getElementById('taskInput');
+          const btn = document.getElementById('addBtn');
+          if (inp && btn) { inp.value = t; btn.click(); }
+        }, i * 800);
+      });
+    }, 600);
+  ` : '';
+  return `<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<style>${css}</style>
+</head>
+<body>
+${bodyContent}
+<script>${js}${autoScript}<\/script>
+</body>
+</html>`;
+}
+
+// =============================================================
+// ステップインジケーターを描画
+// =============================================================
+const stepIndicator = document.getElementById('stepIndicator');
+STEPS.forEach((s, i) => {
+  const wrap = document.createElement('div');
+  wrap.className = 'step-wrap';
+  const dot = document.createElement('div');
+  dot.className = 'step-dot';
+  dot.textContent = s.title;
+  const lbl = document.createElement('div');
+  lbl.className = 'step-label';
+  lbl.textContent = s.label;
+  wrap.appendChild(dot);
+  wrap.appendChild(lbl);
+  stepIndicator.appendChild(wrap);
+});
+const dots = document.querySelectorAll('.step-dot');
+
+// =============================================================
+// アニメーション制御
+// =============================================================
+const codeDisplay = document.getElementById('codeDisplay');
+const previewFrame = document.getElementById('preview');
+const speechEl = document.getElementById('speech');
+const charEl = document.getElementById('character');
+const fileNameEl = document.getElementById('codeFileName');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const speedBtn = document.getElementById('speedBtn');
+const sourceTabsEl = document.getElementById('sourceTabs');
+
+// =============================================================
+// 完成版ソース（タブで切り替え表示）
+// =============================================================
+const SOURCES = {
+  summary: { name: '🎉 かんせい！', code: STEPS[5].code },
+  html:    { name: '📝 index.html', code: STEPS[1].code },
+  css:     { name: '🎨 style.css',  code: STEPS[2].code },
+  js:      { name: '⚡ script.js',  code: STEPS[4].code }
+};
+
+function showSourceTabs() {
+  sourceTabsEl.classList.add('visible');
+  fileNameEl.style.display = 'none';
+  switchTab('summary');
+}
+function hideSourceTabs() {
+  sourceTabsEl.classList.remove('visible');
+  fileNameEl.style.display = '';
+}
+function switchTab(tab) {
+  sourceTabsEl.querySelectorAll('.tab').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  const src = SOURCES[tab];
+  codeDisplay.innerHTML = highlight(src.code, src.name);
+  codeDisplay.scrollTop = 0;
+}
+sourceTabsEl.addEventListener('click', e => {
+  const btn = e.target.closest('.tab');
+  if (btn && btn.dataset.tab) switchTab(btn.dataset.tab);
+});
+
+let currentStep = 0;
+let typing = false;
+let paused = false;
+let typingTimeout = null;
+let typeIndex = 0;
+let speed = 1; // 1, 2, 4
+const speedLevels = [1, 2, 4];
+
+// シンプルなシンタックスハイライト
+// 既に挿入した <span> 内側を後続の regex が再ヒットしないよう
+// プレースホルダ方式（tokens に格納→最後に差し替え）
+function highlight(code, fileName) {
+  let safe = code
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  const tokens = [];
+  const T = (html) => {
+    tokens.push(html);
+    return '' + (tokens.length - 1) + '';
+  };
+
+  if (fileName.includes('.html')) {
+    // 文字列 → タグ → 属性 の順（先に文字列を退避させると属性regexが誤爆しない）
+    safe = safe.replace(/"[^"]*"/g, m => T('<span class="str">' + m + '</span>'));
+    safe = safe.replace(/&lt;\/?[\w-]+/g, m => T('<span class="tag">' + m + '</span>'));
+    safe = safe.replace(/(\s)([\w-]+)(=)/g, (_, sp, n, eq) => sp + T('<span class="attr">' + n + '</span>') + eq);
+  } else if (fileName.includes('.css')) {
+    safe = safe.replace(/^([\w\.\#\-]+)(\s*\{)/gm, (_, sel, r) => T('<span class="tag">' + sel + '</span>') + r);
+    safe = safe.replace(/([\w-]+)(\s*:)/g, (_, n, r) => T('<span class="attr">' + n + '</span>') + r);
+    safe = safe.replace(/#[0-9a-fA-F]+/g, m => T('<span class="num">' + m + '</span>'));
+  } else if (fileName.includes('.js')) {
+    safe = safe.replace(/\/\/[^\n]*/g, m => T('<span class="com">' + m + '</span>'));
+    safe = safe.replace(/'[^']*'/g, m => T('<span class="str">' + m + '</span>'));
+    safe = safe.replace(/\b(const|let|var|if|return|function)\b/g, m => T('<span class="key">' + m + '</span>'));
+    safe = safe.replace(/=&gt;/g, m => T('<span class="key">' + m + '</span>'));
+    safe = safe.replace(/\b(getElementById|createElement|appendChild|addEventListener|remove)\b/g, m => T('<span class="fn">' + m + '</span>'));
+  }
+  return safe.replace(/(\d+)/g, (_, i) => tokens[+i]);
+}
+
+function setStepVisuals(idx) {
+  dots.forEach((d, i) => {
+    d.classList.remove('active', 'done');
+    if (i < idx) d.classList.add('done');
+    else if (i === idx) d.classList.add('active');
+  });
+  const s = STEPS[idx];
+  speechEl.textContent = s.speech;
+  charEl.textContent = s.char;
+  fileNameEl.textContent = s.fileName;
+}
+
+function updatePreview(idx) {
+  const html = STEPS[idx].preview();
+  previewFrame.srcdoc = html;
+}
+
+function typeStep(idx) {
+  clearTimeout(typingTimeout);
+
+  // 最後のステップ（完成）はタイピングせず、タブUIを出して終了
+  if (idx === STEPS.length - 1) {
+    typing = false;
+    showSourceTabs();
+    updatePreview(idx);
+    setTimeout(fireConfetti, 400);
+    return;
+  }
+
+  hideSourceTabs();
+  typing = true;
+  typeIndex = 0;
+  const code = STEPS[idx].code;
+  const fileName = STEPS[idx].fileName;
+  codeDisplay.innerHTML = '<span class="cursor"></span>';
+
+  function tick() {
+    if (paused) {
+      typingTimeout = setTimeout(tick, 100);
+      return;
+    }
+    if (typeIndex >= code.length) {
+      typing = false;
+      codeDisplay.innerHTML = highlight(code, fileName);
+      // 入力完了したらプレビューを更新
+      updatePreview(idx);
+      // 自動で次のステップへ
+      typingTimeout = setTimeout(() => {
+        if (!paused && currentStep < STEPS.length - 1) {
+          goToStep(currentStep + 1);
+        } else if (currentStep === STEPS.length - 1) {
+          fireConfetti();
+        }
+      }, 2500 / speed);
+      return;
+    }
+    typeIndex++;
+    const partial = code.slice(0, typeIndex);
+    codeDisplay.innerHTML = highlight(partial, fileName) + '<span class="cursor"></span>';
+    codeDisplay.scrollTop = codeDisplay.scrollHeight;
+
+    // 早めにプレビュー更新（HTMLは終わりかけ、CSSは終わりかけ）
+    if (typeIndex === code.length - 5) {
+      updatePreview(idx);
+    }
+
+    // 文字種で打鍵間隔を変える
+    const ch = code[typeIndex - 1];
+    let delay = 22;
+    if (ch === '\n') delay = 80;
+    else if (ch === ' ') delay = 12;
+    else if (/[a-zA-Z]/.test(ch)) delay = 18;
+    typingTimeout = setTimeout(tick, delay / speed);
+  }
+  tick();
+}
+
+function goToStep(idx) {
+  if (idx < 0 || idx >= STEPS.length) return;
+  currentStep = idx;
+  clearTimeout(typingTimeout);
+  setStepVisuals(idx);
+  updatePreview(Math.max(0, idx - 1));
+  typeStep(idx);
+}
+
+// =============================================================
+// 操作ボタン
+// =============================================================
+document.getElementById('startBtn').addEventListener('click', () => {
+  document.getElementById('titleScreen').classList.add('hidden');
+  setTimeout(() => {
+    goToStep(0);
+  }, 300);
+});
+
+document.getElementById('nextBtn').addEventListener('click', () => {
+  if (currentStep < STEPS.length - 1) goToStep(currentStep + 1);
+});
+document.getElementById('prevBtn').addEventListener('click', () => {
+  if (currentStep > 0) goToStep(currentStep - 1);
+});
+document.getElementById('restartBtn').addEventListener('click', () => {
+  goToStep(0);
+});
+playPauseBtn.addEventListener('click', () => {
+  paused = !paused;
+  playPauseBtn.textContent = paused ? '▶ さいせい' : '⏸ ストップ';
+});
+speedBtn.addEventListener('click', () => {
+  const i = speedLevels.indexOf(speed);
+  speed = speedLevels[(i + 1) % speedLevels.length];
+  speedBtn.textContent = `⚡ はやさ x${speed}`;
+});
+
+// =============================================================
+// 紙吹雪
+// =============================================================
+function fireConfetti() {
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const colors = ['#ff6b9e', '#06d6a0', '#ffd166', '#118ab2', '#c084fc'];
+  const particles = [];
+  for (let i = 0; i < 150; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 4,
+      vy: 2 + Math.random() * 4,
+      size: 6 + Math.random() * 6,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * Math.PI * 2,
+      vr: (Math.random() - 0.5) * 0.2
+    });
+  }
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+      ctx.restore();
+    });
+    frame++;
+    if (frame < 240) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+// 初期表示
+setStepVisuals(0);
+codeDisplay.innerHTML = '<span style="color:#718096;">▶ スタートを おしてね！</span>';
+</script>
+</body>
+</html>
